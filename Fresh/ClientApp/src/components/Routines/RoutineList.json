@@ -1,0 +1,44 @@
+﻿{
+  "routines": [
+    {
+      "title": "Push Ups",
+      "focus": [ "Chest", "Triceps", "Core" ]
+    },
+    {
+      "title": "Bench Press",
+      "focus": [ "Chest", "Triceps" ]
+    },
+    {
+      "title": "Pull Up",
+      "focus": [ "Shoulders", "Back" ]
+    },
+    {
+      "title": "Bent Over Row",
+      "focus": [ "Back", "Neck", "Biceps", "Shoulders" ]
+    },
+    {
+      "title": "Shoulder Press",
+      "focus": [ "Shoulder", "Triceps" ]
+    },
+    {
+      "title": "Deadlift",
+      "focus": [ "Glutes", "Back", "Hamstrings", "Thighs" ]
+    },
+    {
+      "title": "Back Squat",
+      "focus": [ "Thighs", "Glutes", "Hamstrings", "Back" ]
+    },
+    {
+      "title": "Walking Lunge",
+      "focus": [ "Thighs", "Glutes", "Hamstrings" ]
+    },
+    {
+      "title": "Front Plank",
+      "focus": [ "Core" ]
+    },
+    {
+      "title": "Seated Hamstring Curl",
+      "focus": ["Hamstrings"]
+    }
+  ]
+}
