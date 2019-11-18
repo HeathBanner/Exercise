@@ -4,8 +4,22 @@ const newRoutine = (state, action) => {
     switch (action.type) {
         case 'NEW':
             return {
-                list:  [ ...action.payload ]
+                ...state,
+                list: [...action.payload],
+                loaded: true,
+                empty: false,
             };
+        case 'EMPTY':
+            return {
+                ...state,
+                empty: true,
+                loaded: true,
+            };
+        case 'UPDATE':
+            return {
+                ...state,
+                loaded: false,
+            }
         default:
             return state;
     }
@@ -13,6 +27,8 @@ const newRoutine = (state, action) => {
 
 const initState = {
     list: null,
+    empty: true,
+    loaded: false,
 };
 
 export const store = createStore(newRoutine, initState);

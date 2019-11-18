@@ -25,7 +25,10 @@ export default (props) => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
-    const routineSwitch = () => dispatch({ type: 'NEW' });
+    const routineSwitch = () => {
+        props.handleBuilder(false);
+        dispatch({ type: 'UPDATE' });
+    };
 
     return (
         <Modal

@@ -53,11 +53,7 @@ export default () => {
     const reduxStore = useSelector(state => state);
     const dispatch = useDispatch();
 
-    const [routines, setRoutines] = useState({
-        loaded: false,
-        empty: false,
-        builder: false
-    });
+    const [builder, setBuilder] = useState(false);
     const [confirmation, setConfirmation] = useState({ open: false, title: '' });
     const handleDelete = (title) => {
         setConfirmation({ open: true, title: title });
@@ -68,50 +64,59 @@ export default () => {
             method: 'DELETE',
         })
             .then(() => {
-                dispatch({ type: 'NEW' });
+                fetchRoutines();
                 setConfirmation({ open: false, title: '' });
             });
     };
 
     useEffect(() => {
-        console.log(confirmation);
-    }, [confirmation]);
+        console.log(builder);
+    }, [builder])
 
     useEffect(() => {
-        if (routines.loaded && !reduxStore) { return console.log('BLOCKED'); }
+        if (reduxStore.loaded) { return console.log('BLOCKED'); }
+        if (reduxStore.loaded && builder) { setBuilder(false); }
+        fetchRoutines();
+    }, [reduxStore]);
+
+    const fetchRoutines = () => {
         fetch('getworkout')
             .then(res => res.json())
             .then((result) => {
                 if (!result[0]) {
-                    return setRoutines({ ...routines, empty: true, loaded: true });
+                    return dispatch({ type: 'EMPTY' });
                 }
-                console.log('LOADED');
-                dispatch({ type: 'LOADED' });
-                setRoutines({ ...routines, list: [...result], loaded: true, builder: false });
+                dispatch({ type: 'NEW', payload: result });
             });
-    }, [routines, reduxStore]);
+    };
 
-    if (!routines.loaded) {
+    const handleBuilder = (type) => {
+        setBuilder(type);
+    };
+
+    if (!reduxStore.loaded) {
         return (
             <Grid className={classes.container} item xs={12}>
                 <CircularProgress />
             </Grid>
         );
     }
-    if (routines.builder) { return <WorkoutBuilder />; }
+    if (builder) {
+        return <WorkoutBuilder handleBuilder={handleBuilder} />;
+    }
     return (
         <Grid className={classes.container} item xs={12}>
 
             <Button
                 className={classes.buildButton}
-                onClick={() => setRoutines({ ...routines, builder: true })}
+                onClick={() => setBuilder(true)}
             >
                 <Typography>
                     Build New Workout
                 </Typography>
             </Button>
 
-            {routines.empty ? '' : routines.list.map((routine) => {
+            {reduxStore.empty ? '' : reduxStore.list.map((routine) => {
 
                 return (
                     <RoutineRenderer

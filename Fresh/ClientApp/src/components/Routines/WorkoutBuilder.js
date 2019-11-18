@@ -59,7 +59,7 @@ const initRoutine = {
     ready: false,
 };
 
-export default () => {
+export default (props) => {
 
     const classes = useStyles();
 
@@ -171,6 +171,7 @@ export default () => {
             <CompletionMenu
                 message={completion.message}
                 open={completion.open}
+                handleBuilder={props.handleBuilder}
             />
         </Grid>
     );
