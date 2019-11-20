@@ -12,8 +12,12 @@ import {
 
 const useStyles = makeStyles((theme) => ({
     container: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignContent: 'center',
+        alignItems: 'center',
         height: '100%',
-        position: 'relative'
+        position: 'relative',
     },
 }));
 
@@ -29,6 +33,7 @@ export default () => {
         fetch('getworkout')
             .then(res => res.json())
             .then((result) => {
+                console.log(result);
                 dispatch({
                     type: 'NEW',
                     payload: result
@@ -37,10 +42,15 @@ export default () => {
             });
     }, [])
 
+    const tabChange = (index) => setCurrent({ ...reduxStore.list[index] });
+
     return (
         <Grid className={classes.container} item xs={12}>
 
-            <VerticalTabs list={reduxStore.list} />
+            <VerticalTabs
+                list={reduxStore.list}
+                tabChange={tabChange}
+            />
 
             {current ? <LoggingTool routine={current} /> : ''}
         </Grid>

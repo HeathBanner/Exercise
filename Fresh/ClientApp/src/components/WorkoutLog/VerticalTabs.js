@@ -17,9 +17,13 @@ const useStyles = makeStyles((theme) => ({
     },
     button: {
         position: 'absolute',
-        top: '50%',
+        top: '0%',
         left: 0,
         padding: '15px 15px 15px 0px',
+        color: '#E8A87C',
+        '&:hover': {
+            color: '#E8A87C',
+        },
     },
 }));
 
@@ -32,6 +36,7 @@ export default (props) => {
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
+        props.tabChange(newValue);
     };
 
     const toggleDrawer = (newState) => event => {
@@ -54,7 +59,7 @@ export default (props) => {
                 variant="persistent"
                 open={open}
                 onClose={toggleDrawer(false)}
-                PaperProps={{ style: { top: 'auto' } }}
+                PaperProps={{ style: { top: 0, position: 'absolute' } }}
             >
                 <Paper className={classes.root}>
                     <IconButton

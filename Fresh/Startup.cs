@@ -29,6 +29,7 @@ namespace Exercise
             sp.GetRequiredService<IOptions<Models.ExerciseDatabaseSettings>>().Value);
 
             services.AddSingleton<Services.ExerciseService>();
+            services.AddSingleton<Services.WorkoutLogService>();
 
             services.AddControllersWithViews();
 

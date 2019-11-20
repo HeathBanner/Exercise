@@ -11,7 +11,6 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'flex-start',
         alignContent: 'flex-start',
-        height: '100vh',
         backgroundColor: '#41B3A3',
     },
 }));

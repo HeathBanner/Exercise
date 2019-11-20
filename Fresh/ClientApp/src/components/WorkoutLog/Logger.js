@@ -4,11 +4,11 @@ import { makeStyles } from '@material-ui/styles';
 import {
     TextField,
     Typography,
+    Divider,
 } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     exerciseHeader: {
-        marginBottom: 20,
         width: '100%',
         textAlign: 'center',
     },
@@ -16,6 +16,12 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: 10,
         width: '100%',
         textAlign: 'center',
+    },
+    dividers: {
+        marginBottom: 20,
+        marginBlockStart: '0.5em',
+        backgroundColor: 'rgb(0, 0, 0, 0.2)',
+        width: '60%',
     },
     inputs: {
         marginBottom: 20,
@@ -26,39 +32,49 @@ export default (props) => {
 
     const classes = useStyles();
 
-    const [value, setValue] = useState({ reps: '', length: '' });
-
     const handleChange = (type) => event => {
+        let value = event.target.value;
+
+        if (isNaN(value)) { return; }
+        if (value) { value = parseInt(value); }
         if (type === 'reps') {
-            return setValue({ ...value, reps: event.target.value });
+            return props.handleChange('reps', value, props.index);
         }
-        return setValue({ ...value, length: event.target.value });
+
+        return props.handleChange('length', value, props.index);
     };
 
     return (
         <>
-            <Typography className={classes.exerciseHeader} >
+            <Typography
+                className={classes.exerciseHeader}
+                color="primary"
+            >
                 {props.routine.title}
             </Typography>
+
+            <Divider className={classes.dividers} />
             
             <Typography className={classes.inputHeaders} >
-                Reps
+                Reps In Total
             </Typography>
             <TextField
                 className={classes.inputs}
-                value={value.reps}
-                label="reps"
+                value={props.routine.reps}
                 onChange={handleChange('reps')}
+                label="Total"
+                variant="outlined"
             />
 
             <Typography className={classes.inputHeaders} >
-                Length
+                Length X Minutes
             </Typography>
             <TextField
                 className={classes.inputs}
-                value={value.length}
-                label="length"
+                value={props.routine.length}
                 onChange={handleChange('length')}
+                label="Time"
+                variant="outlined"
             />
         </>
     );
