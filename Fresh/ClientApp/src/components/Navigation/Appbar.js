@@ -22,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
         left: '50%',
         transform: 'translate(-50%, -50%)',
     },
+    appbar: {
+        backgroundColor: '#E27D60',
+    },
 }));
 
 const HideOnScroll = (props) => {
@@ -47,7 +50,7 @@ export default (props) => {
         <Fragment>
             <CssBaseline />
             <HideOnScroll {...props}>
-                <AppBar>
+                <AppBar className={classes.appbar}>
                     <Toolbar>
                         <Drawer />
                         <Typography

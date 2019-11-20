@@ -8,7 +8,10 @@ import { Grid } from '@material-ui/core';
 export default () => {
 
     return (
-        <Grid container>
+        <Grid
+            style={{ backgroundColor: '#85DCB' }}
+            container
+        >
 
             <Appbar />
 
