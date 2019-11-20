@@ -43,58 +43,63 @@ const navList = [
         icon: 'assignment',
         link: '/workoutlog',
     },
+    {
+        text: 'Progress',
+        icon: 'trending_up',
+        link: '/progress',
+    }
 ];
 
 export default () => {
 
     const classes = useStyles();
 
-  const [state, setState] = useState(false);
+    const [state, setState] = useState(false);
 
-  const toggleDrawer = (open) => event => {
-    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return;
-    }
-    setState(open);
-  };
+    const toggleDrawer = (open) => event => {
+        if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+            return;
+        }
+        setState(open);
+    };
 
-  return (
-    <div>
+    return (
+        <div>
 
-        <Button onClick={toggleDrawer(true)}>
-            <Icon>
-                menu
-            </Icon>      
-        </Button>
-        <Drawer open={state} onClose={toggleDrawer(false)}>
-              <div
-                  className={classes.fullList}
-                  role="presentation"
-                  onClick={toggleDrawer(false)}
-                  onKeyDown={toggleDrawer(false)}
-              >
-                  <List>
-                      {navList.map((item) => (
-                          <a
-                              className={classes.links}
-                              href={item.link}
-                              key={item.text}
-                          >
-                              <ListItem button>
-                                  <ListItemIcon>
-                                      <Icon>
-                                          {item.icon}
-                                      </Icon>
-                                  </ListItemIcon>
-                                  <ListItemText primary={item.text} />
-                              </ListItem>
-                          </a>
-                      ))}
-                  </List>
-              </div>
+            <Button onClick={toggleDrawer(true)}>
+                <Icon style={{ color: 'white' }}>
+                    menu
+                </Icon>
+            </Button>
+            <Drawer open={state} onClose={toggleDrawer(false)}>
+                <div
+                    className={classes.fullList}
+                    role="presentation"
+                    onClick={toggleDrawer(false)}
+                    onKeyDown={toggleDrawer(false)}
+                >
+                    <List>
+                        {navList.map((item) => (
+                            <a
+                                className={classes.links}
+                                href={item.link}
+                                key={item.text}
+                            >
+                                <ListItem button>
+                                    <ListItemIcon>
+                                        <Icon>
+                                            {item.icon}
+                                        </Icon>
+                                    </ListItemIcon>
+                                    <ListItemText primary={item.text} />
+                                </ListItem>
+                            </a>
+                        ))}
+                    </List>
+                </div>
 
-        </Drawer>
+            </Drawer>
 
-    </div>
-  );
-}
+        </div>
+    );
+};

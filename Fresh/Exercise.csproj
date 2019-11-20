@@ -23,6 +23,12 @@
     <Content Remove="$(SpaRoot)**" />
     <None Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+    <None Remove="ClientApp\src\components\Counter.js" />
+    <None Remove="ClientApp\src\components\Layout.js" />
+    <None Remove="ClientApp\src\components\NavMenu.js" />
+    <None Remove="ClientApp\src\components\Home.js" />
+    <None Remove="ClientApp\src\components\NavMenu.css" />
+    <None Remove="ClientApp\src\components\FetchData.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,6 +39,8 @@
     <Folder Include="ClientApp\src\pages\WorkoutLog\" />
     <Folder Include="ClientApp\src\components\WorkoutLog\" />
     <Folder Include="ClientApp\src\components\Notifications\" />
+    <Folder Include="ClientApp\src\pages\Progress\" />
+    <Folder Include="ClientApp\src\components\Progress\" />
   </ItemGroup>
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
     <!-- Ensure Node.js is installed -->

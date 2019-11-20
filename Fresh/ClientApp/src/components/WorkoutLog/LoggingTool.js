@@ -2,6 +2,7 @@
 
 import Logger from './Logger';
 import Success from '../Notifications/Success';
+import Template from '../../progressTemplate';
 
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -53,10 +54,40 @@ export default (props) => {
         setList([ ...newList ]);
     };
 
+    console.log(Date.now());
+
+    const getCalories = () => {
+        let weight = 165 / 2.2;
+        let met = Template.HighGym;
+        let burned;
+        list.forEach((item) => {
+            let energy = (0.0175 * met * weight);
+            console.log(energy, item.length);
+            if (!burned) { return burned = energy * item.length; }
+            burned = burned + (energy * item.length);
+        });
+
+        return Math.round(burned);
+    };
+
+    const getDate = () => {
+        const dateTemplate = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        let today = new Date();
+
+        return {
+            Month: today.getMonth(),
+            Year: today.getFullYear(),
+            Date: today.getDate(),
+            Day: dateTemplate[today.getDay()]
+        };
+    };
+
     const handleSubmit = () => {
         let newLog = {
             Routine: props.routine.title,
-            Exercise: [ ...list ],
+            Exercise: [...list],
+            Calories: getCalories(),
+            Date: getDate(),
         };
         console.log(newLog);
         fetch('api/workoutlog', {
