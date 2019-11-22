@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using System.Collections.Generic;
@@ -27,6 +28,8 @@ namespace Exercise.Services
 
         public WorkoutLog Create(WorkoutLog log)
         {
+            Debug.WriteLine("============\n\n\n" + log + "\n\n\n============");
+
             _logs.InsertOne(log);
             return log;
         }

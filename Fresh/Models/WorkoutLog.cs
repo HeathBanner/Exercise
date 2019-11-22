@@ -12,12 +12,4 @@ namespace Exercise.Models
         public LogDate Date { get; set; }
         public int Calories { get; set; }
     }
-
-    public class LogDate
-    {
-        public int Month { get; set; }
-        public int Date { get; set; }
-        public int Year { get; set; }
-        public string Day { get; set; }
-    }
 }
