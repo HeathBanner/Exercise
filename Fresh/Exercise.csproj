@@ -41,6 +41,7 @@
     <Folder Include="ClientApp\src\components\Notifications\" />
     <Folder Include="ClientApp\src\pages\Progress\" />
     <Folder Include="ClientApp\src\components\Progress\" />
+    <Folder Include="ClientApp\src\components\WorkoutLog\ObjectTemplates\" />
   </ItemGroup>
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
     <!-- Ensure Node.js is installed -->

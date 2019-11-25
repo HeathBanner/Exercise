@@ -7,6 +7,7 @@ using Exercise.Models;
 using Exercise.Services;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Diagnostics;
 
 namespace Exercise.Controllers
 {
@@ -31,6 +32,15 @@ namespace Exercise.Controllers
             _logService.Create(log);
 
             return CreatedAtRoute("default", new { id = log.Id.ToString(), }, log);
+        }
+
+        [HttpPost("{id}")]
+        public ActionResult<Users> Create([FromBody] Users user)
+        {
+
+            _logService.Create(user);
+
+            return CreatedAtRoute("default", new { id = user.Id.ToString(), }, user);
         }
     }
 }

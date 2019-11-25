@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Exercise.Models
@@ -9,8 +10,8 @@ namespace Exercise.Models
         public Guid Id { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
-        public WeeklyStats WeeklyStats { get; set; }
-        public int CurrentWeek { get; set; }
+        public WeeklyStats[] WeeklyStats { get; set; }
+        public LogDate CurrentWeek { get; set; }
         public Goal Goal { get; set; }
     }
 
@@ -33,7 +34,7 @@ namespace Exercise.Models
 
     public class UpperBody
     {
-        public string[] Routines { get; set; }
+        public string Routine { get; set; }
         public LogDate Date { get; set; }
         public int Calories { get; set; }
 

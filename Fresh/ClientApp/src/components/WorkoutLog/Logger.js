@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import React from 'react';
 
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -37,11 +37,11 @@ export default (props) => {
 
         if (isNaN(value)) { return; }
         if (value) { value = parseInt(value); }
-        if (type === 'reps') {
-            return props.handleChange('reps', value, props.index);
+        if (type === 'Reps') {
+            return props.handleChange('Reps', value, props.title);
         }
 
-        return props.handleChange('length', value, props.index);
+        return props.handleChange('Length', value, props.title);
     };
 
     return (
@@ -50,7 +50,7 @@ export default (props) => {
                 className={classes.exerciseHeader}
                 color="primary"
             >
-                {props.routine.title}
+                {props.title}
             </Typography>
 
             <Divider className={classes.dividers} />
@@ -60,8 +60,8 @@ export default (props) => {
             </Typography>
             <TextField
                 className={classes.inputs}
-                value={props.routine.reps}
-                onChange={handleChange('reps')}
+                value={props.info.Reps}
+                onChange={handleChange('Reps')}
                 label="Total"
                 variant="outlined"
             />
@@ -71,8 +71,8 @@ export default (props) => {
             </Typography>
             <TextField
                 className={classes.inputs}
-                value={props.routine.length}
-                onChange={handleChange('length')}
+                value={props.info.Length}
+                onChange={handleChange('Length')}
                 label="Time"
                 variant="outlined"
             />
