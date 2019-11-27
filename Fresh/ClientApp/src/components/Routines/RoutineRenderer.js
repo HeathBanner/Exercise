@@ -88,12 +88,13 @@ export default (props) => {
                 </MenuItem>
             </Menu>
 
-            {routine.exercise.map((item) => {
-                return (
-                    <Typography key={item.title}>
-                        {item.title}
+            {Object.keys(routine.upperBody).map((key) => {
+                return routine.upperBody[key] ?
+                    <Typography key={key}>
+                        {key}
                     </Typography>
-                );
+                    :
+                    ''
             })}
         </Paper>
     );

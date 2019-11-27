@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 
 import RoutineList from './RoutineList.json';
 
@@ -31,89 +31,118 @@ const useStyles = makeStyles((theme) => ({
         overflow: 'auto',
     },
 }));
-
-const not = (a, b) => {
-    return b.filter((value, index) => {
-        return a[index].title !== value.title;
-    });
-};
-
-const sweep = (a, b) => {
-    return a.filter((value) => {
-        return !b.includes(value.title);
-    })
-};
-
-const intersection = (a, b, side) => {
-    if (side === 'left') {
-        return b.filter((value) => {
-            return a.leftChecked.indexOf(value.title) !== -1;
+//checked.rightChecked, left, "left"
+const objConcat = (a, b, side) => {
+    let newObj = { ...b };
+    if (side === "left") {
+        Object.keys(a).forEach((key) => {
+            newObj[key] = { ...a[key] };
         });
     } else {
-        return b.filter((value) => {
-            return a.rightChecked.indexOf(value.title) !== -1;
+        Object.keys(a).forEach((key) => {
+            newObj[key] = { ...a[key] };
         });
     }
+
+    return newObj;
 };
 
+//left, checked.leftChecked
+const sweep = (a, b) => {
+    let newObj = { ...a };
+    Object.keys(a).forEach((key) => {
+        if (b[key]) delete newObj[key];
+    });
+
+    return newObj;
+    //return a.filter((value) => {
+    //    return !b.includes(value.title);
+    //})
+};
+
+// Checked, Left, "Left"
+const intersection = (a, b, side) => {
+    let checkedList = {};
+    if (side === 'left') {
+        Object.keys(b).forEach((key) => {
+            if (a.leftChecked[key]) return checkedList[key] = b[key];
+        });
+        //return b.filter((value) => {
+        //    return a.leftChecked.indexOf(value.title) !== -1;
+        //});
+    } else {
+        Object.keys(b).forEach((key) => {
+            if (a.leftChecked[key]) return checkedList[key] = b[key];
+        });
+        //return b.filter((value) => {
+        //    return a.rightChecked.indexOf(value.title) !== -1;
+        //});
+    }
+
+    return checkedList;
+};
+
+//checked.rightChecked, left
 const union = (a, b) => {
-    let newArr = [];
-    b.forEach((item) => {
-        if (!a.includes(item.title)) {
-            return newArr.push(item.title);
+    let newObj = {};
+    Object.keys(b).forEach((key) => {
+        if (!a[key]) {
+            return newObj[key] = { ...b[key] };
         }
     })
-    return [...a, ...newArr];
+    return { ...a, ...newObj };
 };
 
 export default (props) => {
 
     const classes = useStyles();
 
-    const [checked, setChecked] = useState({ leftChecked: [], rightChecked: [] });
-    const [left, setLeft] = useState([...RoutineList.routines]);
-    const [right, setRight] = useState([]);
+    const [checked, setChecked] = useState({ leftChecked: {}, rightChecked: {} });
+    const [left, setLeft] = useState({ ...RoutineList.routines });
+    const [right, setRight] = useState({});
+
+    useEffect(() => {
+        console.log(left, right);
+    }, [left, right]);
 
     const leftChecked = intersection(checked, left, 'left');
     const rightChecked = intersection(checked, right, 'right');
 
-    const handleToggle = (value, side) => () => {
+    const handleToggle = (key, side) => () => {
         const newChecked = { ...checked };
 
         if (side === 'left') {
-            let currentTitle = left[value].title;
-            checked.leftChecked.includes(currentTitle)
-            ?
-            newChecked.leftChecked.splice(newChecked.leftChecked.indexOf(currentTitle), 1)
-            :
-            newChecked.leftChecked.push(currentTitle)
+            checked.leftChecked[key]
+                ?
+                delete newChecked.leftChecked[key]
+                :
+                newChecked.leftChecked[key] = { ...left[key] }
         } else {
-            let currentTitle = right[value].title;
-            checked.rightChecked.includes(currentTitle)
-            ?
-            newChecked.rightChecked.splice(newChecked.rightChecked.indexOf(currentTitle), 1)
-            :
-            newChecked.rightChecked.push(currentTitle)
+            checked.rightChecked[key]
+                ?
+                delete newChecked.rightChecked[key]
+                :
+                newChecked.rightChecked[key] = { ...right[key] }
         }
 
         setChecked(newChecked);
     };
 
-    const numberOfChecked = (items, side) => {
+    const numberOfChecked = (side) => {
         if (side === 'left') {
-            return checked.leftChecked.length;
+            return Object.keys(checked.leftChecked).length;
         } else {
-            return checked.rightChecked.length;
+            return Object.keys(checked.rightChecked).length;
         }
     };
 
     const handleToggleAll = (items, side) => () => {
-        if (numberOfChecked(items, side) === items.length) {
+        if (numberOfChecked(side) === Object.keys(items).length) {
             side === 'left'
             ?
-            setChecked({ ...checked, leftChecked: [] })
+                setChecked({ ...checked, leftChecked: {} })
             :
-            setChecked({ ...checked, rightChecked: [] })
+                setChecked({ ...checked, rightChecked: {} })
         } else {
             side === 'left'
             ?
@@ -124,7 +153,7 @@ export default (props) => {
     };
 
     const handleCheckedRight = () => {
-        setRight(right.concat(leftChecked));
+        setRight(objConcat(checked.leftChecked, right, "right"));
         setLeft(sweep(left, checked.leftChecked));
         setChecked({
             ...checked,
@@ -133,7 +162,7 @@ export default (props) => {
     };
 
     const handleCheckedLeft = () => {
-        setLeft(left.concat(rightChecked));
+        setLeft(objConcat(checked.rightChecked, left, "left"));
         setRight(sweep(right, checked.rightChecked));
         setChecked({
             ...checked,
@@ -149,13 +178,13 @@ export default (props) => {
                     avatar={
                         <Checkbox
                             onClick={handleToggleAll(items, side)}
-                            checked={numberOfChecked(items, side) === items.length && items.length !== 0}
+                            checked={numberOfChecked(side) === Object.keys(items).length && Object.keys(items).length !== 0}
                             disabled={items.length === 0}
                             inputProps={{ 'aria-label': 'all items selected' }}
                         />
                     }
                     title={title}
-                    subheader={`${numberOfChecked(items, side)}/${items.length} selected`}
+                    subheader={`${numberOfChecked(side)}/${Object.keys(items).length} selected`}
                 />
                 <Divider />
                 <List
@@ -165,10 +194,10 @@ export default (props) => {
                     role="list"
                 >
 
-                    {items.map((value, index) => {
-                        const labelId = `transfer-list-all-item-${value.title}-label`;
+                    {Object.entries(items).map(([key, value]) => {
+                        const labelId = `transfer-list-all-item-${key}-label`;
 
-                        if (!value.title) { return; }
+                        if (!key) { return; }
 
                         let focusList;
                         value.focus.forEach((item) => {
@@ -178,19 +207,19 @@ export default (props) => {
 
                         return (
                             <ListItem
-                                key={value.title}
+                                key={key}
                                 role="listitem"
                                 button
-                                onClick={handleToggle(index, side)}
+                                onClick={handleToggle(key, side)}
                             >
                                 <ListItemIcon>
                                     <Checkbox
                                         checked={
                                             side === 'left'
                                                 ?
-                                                checked.leftChecked.includes(value.title)
+                                                Boolean(checked.leftChecked[key])
                                                 :
-                                                checked.rightChecked.includes(value.title)
+                                                Boolean(checked.rightChecked[key])
                                         }
                                         tabIndex={-1}
                                         disableRipple
@@ -199,7 +228,7 @@ export default (props) => {
                                 </ListItemIcon>
                                 <ListItemText
                                     id={labelId}
-                                    primary={value.title}
+                                    primary={key}
                                     secondary={focusList}
                                 />
                             </ListItem>
@@ -227,7 +256,7 @@ export default (props) => {
                         size="small"
                         className={classes.button}
                         onClick={handleCheckedRight}
-                        disabled={leftChecked.length === 0}
+                        disabled={Object.keys(leftChecked).length === 0}
                         aria-label="move selected right"
                     >
                         <Icon>expand_more</Icon>
@@ -237,7 +266,7 @@ export default (props) => {
                         size="small"
                         className={classes.button}
                         onClick={handleCheckedLeft}
-                        disabled={rightChecked.length === 0}
+                        disabled={Object.keys(rightChecked).length === 0}
                         aria-label="move selected left"
                     >
                         <Icon>expand_less</Icon>
@@ -253,7 +282,7 @@ export default (props) => {
                     width: '90%',
                     color: props.ready ? 'rgb(255, 255, 255, 0.8)' : '',
                 }}
-                disabled={right.length < 1}
+                disabled={Object.keys(right).length < 1}
             >
                 <Typography>
                     {props.ready ? 'Next' : 'Done'}

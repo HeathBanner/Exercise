@@ -8,13 +8,20 @@ namespace Exercise.Models
         [BsonId]
         public Guid Id { get; set; }
         public string Title { get; set; }
-        public Exercise[] Exercise { get; set; }
+        public RUpperBody UpperBody { get; set; }
     }
-    public class Exercise
+
+    public class RUpperBody
     {
-        public int Reps { get; set; }
-        public int Length { get; set; }
-        public string[] Focus { get; set; }
-        public string Title { get; set; }
+        public BodyLog PushUps { get; set; }
+        public BodyLog BenchPress { get; set; }
+        public BodyLog PullUp { get; set; }
+        public BodyLog BentOverRow { get; set; }
+        public BodyLog ShoulderPress { get; set; }
+        public BodyLog DeadLift { get; set; }
+        public BodyLog BackSquat { get; set; }
+        public BodyLog WalkingLunge { get; set; }
+        public BodyLog FrontPlank { get; set; }
+        public BodyLog SeatedHamstringCurl { get; set; }
     }
 }

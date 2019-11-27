@@ -1,10 +1,9 @@
-﻿import React, { Fragment } from 'react';
+﻿import React from 'react';
 
 import Marks from './Marks';
 
 import { makeStyles } from '@material-ui/styles';
 import {
-    Grid,
     Typography,
     Slider,
     Divider,
@@ -34,11 +33,11 @@ export default (props) => {
 
     const valueText = (type) => (event, value) => {
         if (value === props.exercise[type]) { return; }
-        props.updateSliders(value, type, props.index);
+        props.updateSliders(value, type, props.title);
     };
 
     return (
-        <Fragment>
+        <>
             <Typography
                 className={classes.title}
             >
@@ -82,6 +81,6 @@ export default (props) => {
                 max={100}
                 valueLabelDisplay="on"
             />
-        </Fragment>
+        </>
     );
 };

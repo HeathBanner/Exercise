@@ -1,44 +1,54 @@
 ﻿{
-  "routines": [
-    {
-      "title": "Push Ups",
-      "focus": [ "Chest", "Triceps", "Core" ]
+  "routines": {
+    "PushUps": {
+      "focus": [ "Chest", "Triceps", "Core" ],
+      "Reps": 0,
+      "Minutes": 0
     },
-    {
-      "title": "Bench Press",
-      "focus": [ "Chest", "Triceps" ]
+    "BenchPress": {
+      "focus": [ "Chest", "Triceps" ],
+      "Reps": 0,
+      "Minutes": 0
     },
-    {
-      "title": "Pull Up",
-      "focus": [ "Shoulders", "Back" ]
+    "PullUp": {
+      "focus": [ "Shoulders", "Back" ],
+      "Reps": 0,
+      "Minutes": 0
     },
-    {
-      "title": "Bent Over Row",
-      "focus": [ "Back", "Neck", "Biceps", "Shoulders" ]
+    "BentOverRow": {
+      "focus": [ "Back", "Neck", "Biceps", "Shoulders" ],
+      "Reps": 0,
+      "Minutes": 0
     },
-    {
-      "title": "Shoulder Press",
-      "focus": [ "Shoulder", "Triceps" ]
+    "ShoulderPress": {
+      "focus": [ "Shoulder", "Triceps" ],
+      "Reps": 0,
+      "Minutes": 0
     },
-    {
-      "title": "Deadlift",
-      "focus": [ "Glutes", "Back", "Hamstrings", "Thighs" ]
+    "DeadLift": {
+      "focus": [ "Glutes", "Back", "Hamstrings", "Thighs" ],
+      "Reps": 0,
+      "Minutes": 0
     },
-    {
-      "title": "Back Squat",
-      "focus": [ "Thighs", "Glutes", "Hamstrings", "Back" ]
+    "BackSquat": {
+      "focus": [ "Thighs", "Glutes", "Hamstrings", "Back" ],
+      "Reps": 0,
+      "Minutes": 0
     },
-    {
-      "title": "Walking Lunge",
-      "focus": [ "Thighs", "Glutes", "Hamstrings" ]
+    "WalkingLunge": {
+      "focus": [ "Thighs", "Glutes", "Hamstrings" ],
+      "Reps": 0,
+      "Minutes": 0
     },
-    {
-      "title": "Front Plank",
-      "focus": [ "Core" ]
+    "FrontPlank": {
+      "focus": [ "Core" ],
+      "Reps": 0,
+      "Minutes": 0
     },
-    {
-      "title": "Seated Hamstring Curl",
-      "focus": ["Hamstrings"]
+    "SeatedHamstringCurl": {
+      "focus": [ "Hamstrings" ],
+      "Reps": 0,
+      "Minutes": 0
     }
-  ]
+  }
 }

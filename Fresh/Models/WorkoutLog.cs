@@ -8,7 +8,6 @@ namespace Exercise.Models
         [BsonId]
         public Guid Id { get; set; }
         public string Routine { get; set; }
-        public Exercise[] Exercise { get; set; }
         public LogDate Date { get; set; }
         public int Calories { get; set; }
     }

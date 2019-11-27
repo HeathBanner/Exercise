@@ -6,6 +6,7 @@
 import ExerciseSelector from './ExerciseSelector';
 import Sliders from './Sliders';
 import CompletionMenu from './CompletionMenu';
+import RoutineList from './RoutineList';
 
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -54,8 +55,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const initRoutine = {
-    title: '',
-    exercise: [],
+    Title: '',
+    UpperBody: { ...RoutineList.routines },
     ready: false,
 };
 
@@ -67,21 +68,22 @@ export default (props) => {
     const [step, setStep] = useState(0);
     const [completion, setCompletion] = useState({ message: '', open: false });
 
-    useEffect(() => {
-        console.log('Updated');
-    });
-
-    const handleInput = (section) => event => {
-        setRoutine({ ...routine, [section]: event.target.value });
+    const handleInput = () => event => {
+        setRoutine({ ...routine, Title: event.target.value });
     };
+
+    useEffect(() => {
+        console.log(routine);
+    }, routine);
 
     const updateExercise = (newList) => {
-        setRoutine({ ...routine, exercise: [...newList], ready: true });
+        setRoutine({ ...routine, UpperBody: { ...newList }, ready: true });
     };
 
-    const updateSliders = (value, type, index) => {
-        const newExercise = [ ...routine.exercise ];
-        newExercise[index][type] = value;
+    const updateSliders = (value, type, key) => {
+        const newExercise = { ...routine.UpperBody };
+        console.log(value, key);
+        newExercise[key][type] = value;
 
         setRoutine({ ...routine, ...newExercise });
     };
@@ -93,9 +95,9 @@ export default (props) => {
 
     const preSubmit = () => {
         switch (true) {
-            case routine.title:
+            case routine.Title:
                 return console.log('No Title!');
-            case routine.exercise.length < 1:
+            case Object.keys(routine.UpperBody).length < 1:
                 return console.log('No exercises chosen!');
             default:
                 handleSubmit();
@@ -106,8 +108,8 @@ export default (props) => {
         fetch('getworkout', {
             method: 'POST',
             body: JSON.stringify({
-                Title: routine.title,
-                Exercise: routine.exercise,
+                Title: routine.Title,
+                UpperBody: routine.UpperBody,
             }),
             headers: { 'Content-Type': 'application/json' }
         })
@@ -127,8 +129,8 @@ export default (props) => {
                     <TextField
                         className={classes.textFields}
                         label="Routine Name"
-                        value={routine.title}
-                        onChange={handleInput('title')}
+                        value={routine.Title}
+                        onChange={handleInput()}
                     />
 
                     <ExerciseSelector
@@ -143,19 +145,20 @@ export default (props) => {
     return (
         <Grid className={classes.container} item xs={12}>
 
-            {routine.exercise.map((item, index) => {
+            {Object.entries(routine.UpperBody).map(([key, value]) => {
+                console.log(key, value, key.Reps);
                 return (
-                    <Paper key={item.title} className={classes.paper}>
+                    <Paper key={key} className={classes.paper}>
                         <Typography>
-                            {item.title}
+                            {key}
                         </Typography>
 
                         <Sliders
                             typeOne="Reps"
                             typeTwo="Length"
                             updateSliders={updateSliders}
-                            index={index}
-                            exercise={item}
+                            exercise={value}
+                            title={key}
                         />
                     </Paper>
                 );

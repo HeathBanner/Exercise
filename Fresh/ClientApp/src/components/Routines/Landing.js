@@ -70,10 +70,6 @@ export default () => {
     };
 
     useEffect(() => {
-        console.log(builder);
-    }, [builder])
-
-    useEffect(() => {
         if (reduxStore.loaded) { return console.log('BLOCKED'); }
         if (reduxStore.loaded && builder) { setBuilder(false); }
         fetchRoutines();
