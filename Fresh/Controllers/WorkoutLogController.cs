@@ -37,9 +37,7 @@ namespace Exercise.Controllers
         [HttpPost("{id}")]
         public ActionResult<Users> Create([FromBody] Users user)
         {
-
             _logService.Create(user);
-
             return CreatedAtRoute("default", new { id = user.Id.ToString(), }, user);
         }
     }

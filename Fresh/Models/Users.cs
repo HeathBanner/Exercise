@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Exercise.Models
@@ -17,6 +18,7 @@ namespace Exercise.Models
 
     public class WeeklyStats
     {
+        public int Date { get; set; }
         public Week Sunday { get; set; }
         public Week Monday { get; set; }
         public Week Tuesday { get; set; }

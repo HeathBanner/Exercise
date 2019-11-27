@@ -30,48 +30,76 @@ namespace Exercise.Services
 
         public WorkoutLog Create(WorkoutLog log)
         {
-            Debug.WriteLine("============\n\n\n" + log + "\n\n\n============");
-
             _logs.InsertOne(log);
             return log;
         }
 
         public Users Create(Users user)
         {
-            //var result = _users.Find(new BsonDocument()).ToList();
-            //var Heath = result[0];
+            var result = _users.Find(new BsonDocument()).ToList();
+            var Heath = result[0];
 
-            //var flag = false;
+            var dayOfWeek = user.CurrentWeek.Day;
+            Week newDay = null;
 
-            //if (user.Date.Year != Heath.CurrentWeek.Year)
-            //{
-            //    flag = true;
-            //}
-            //else if (info.Date.Month != Heath.CurrentWeek.Month)
-            //{
-            //    flag = true;
-            //}
-            //else if (info.Date.Date - Heath.CurrentWeek.Date > 6)
-            //{
-            //    flag = true;
-            //}
+            switch (user.CurrentWeek.Day)
+            {
+                case "Sunday":
+                    newDay = user.WeeklyStats[0].Sunday;
+                    break;
+                case "Monday":
+                    newDay = user.WeeklyStats[0].Monday;
+                    break;
+                case "Tuesday":
+                    newDay = user.WeeklyStats[0].Tuesday;
+                    break;
+                case "Wednesday":
+                    newDay = user.WeeklyStats[0].Wednesday;
+                    break;
+                case "Thurday":
+                    newDay = user.WeeklyStats[0].Thursday;
+                    break;
+                case "Friday":
+                    newDay = user.WeeklyStats[0].Friday;
+                    break;
+                default:
+                    newDay = user.WeeklyStats[0].Saturday;
+                    break;
+            }
 
-            //if (flag == false)
-            //{
-            //    var filter = Builders<Users>.Filter.Eq("Username", "Heath");
-            //    var update = Builders<Users>.Update.Push("WeeklyStats", newWeek);
-            //    _users.UpdateOne(filter, update);
-            //}
-            //if (flag == true)
-            //{
-            //};
+            var flag = false;
 
+            if (user.CurrentWeek.Year != Heath.CurrentWeek.Year)
+            {
+                flag = true;
+            }
+            else if (user.CurrentWeek.Month != Heath.CurrentWeek.Month)
+            {
+                flag = true;
+            }
+            else if (user.CurrentWeek.Date - Heath.CurrentWeek.Date >= 6)
+            {
+                flag = true;
+            }
+
+            if (flag == false)
+            {
+                var filter = Builders<Users>.Filter.And(
+                    Builders<Users>.Filter.Eq("Username", "Heath"),
+                    Builders<Users>.Filter.ElemMatch(x => x.WeeklyStats, y => y.Date == 25) );
+                var update = new UpdateDefinitionBuilder<Users>()
+                    .Set($"WeeklyStats.$.{dayOfWeek}", newDay);
+
+                _users.UpdateOne(filter, update);
+            }
+            if (flag == true)
+            {
                 var filter = Builders<Users>.Filter.Eq("Username", "Heath");
-            var update = Builders<Users>.Update
-                .Set("CurrentWeek", user.CurrentWeek)
-                .Push("WeeklyStats", user.WeeklyStats[0]);
-            _users.UpdateOne(filter, update);
-            //}
+                var update = Builders<Users>.Update
+                    .Set("CurrentWeek", user.CurrentWeek)
+                    .Push("WeeklyStats", user.WeeklyStats[0]);
+                _users.UpdateOne(filter, update);
+            }
 
             return user;
         }

@@ -76,7 +76,8 @@ export default (props) => {
             Month: today.getMonth(),
             Year: today.getFullYear(),
             Date: today.getDate(),
-            Day: dateTemplate[today.getDay()]
+            //Day: dateTemplate[today.getDay()]
+            Day: "Wednesday"
         };
     };
 
