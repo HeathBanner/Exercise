@@ -19,9 +19,26 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default (props) => {
+export default ({ notification, handleClose }) => {
 
     const classes = useStyles();
+    const { error, success, warning, message } = notification;
+
+    const isOpen = () => {
+        if (error || success || warning) return true;
+        return false;
+    };
+
+    const cardColor = () => {
+        switch (true) {
+            case error:
+                return classes.error;
+            case success:
+                return classes.success;
+            default:
+                return classes.warning;
+        }
+    };
 
     return (
         <Snackbar
@@ -29,23 +46,23 @@ export default (props) => {
                 vertical: 'bottom',
                 horizontal: 'center',
             }}
-            open={props.success.open}
+            open={isOpen()}
             autoHideDuration={6000}
-            onClose={props.handleClose}
+            onClose={handleClose}
         >
             <SnackbarContent
-                className={classes.success}
+                className={cardColor()}
                 message={
                     <span className={classes.message}>
                         <Icon>check_circle</Icon>
-                        {props.success.message}
+                        {message}
                     </span>
                 }
                 action={
                     <IconButton
                         key="close"
                         color="inherit"
-                        onClick={props.handleClose}
+                        onClick={handleClose}
                     >
                         <Icon>close</Icon>
                     </IconButton>

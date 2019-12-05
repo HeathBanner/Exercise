@@ -38,10 +38,10 @@ export default (props) => {
         if (isNaN(value)) { return; }
         if (value) { value = parseInt(value); }
         if (type === 'Reps') {
-            return props.handleChange('Reps', value, props.title);
+            return props.handleChange('reps', value, props.title);
         }
 
-        return props.handleChange('Length', value, props.title);
+        return props.handleChange('length', value, props.title);
     };
 
     return (

@@ -38,57 +38,26 @@ namespace Exercise.Services
         {
             var result = _users.Find(new BsonDocument()).ToList();
             var Heath = result[0];
-
             var dayOfWeek = user.CurrentWeek.Day;
-            Week newDay = null;
-
-            switch (user.CurrentWeek.Day)
-            {
-                case "Sunday":
-                    newDay = user.WeeklyStats[0].Sunday;
-                    break;
-                case "Monday":
-                    newDay = user.WeeklyStats[0].Monday;
-                    break;
-                case "Tuesday":
-                    newDay = user.WeeklyStats[0].Tuesday;
-                    break;
-                case "Wednesday":
-                    newDay = user.WeeklyStats[0].Wednesday;
-                    break;
-                case "Thurday":
-                    newDay = user.WeeklyStats[0].Thursday;
-                    break;
-                case "Friday":
-                    newDay = user.WeeklyStats[0].Friday;
-                    break;
-                default:
-                    newDay = user.WeeklyStats[0].Saturday;
-                    break;
-            }
-
             var flag = false;
 
-            if (user.CurrentWeek.Year != Heath.CurrentWeek.Year)
-            {
-                flag = true;
-            }
-            else if (user.CurrentWeek.Month != Heath.CurrentWeek.Month)
-            {
-                flag = true;
-            }
-            else if (user.CurrentWeek.Date - Heath.CurrentWeek.Date >= 6)
-            {
-                flag = true;
-            }
+            Week newDay;
+            WorkoutLogTools tools = new WorkoutLogTools();
+
+            tools.DaySelector(user.WeeklyStats[0], user.CurrentWeek.Day, out newDay);
+
+            if (user.CurrentWeek.Year != Heath.CurrentWeek.Year) flag = true;
+            else if (user.CurrentWeek.Month != Heath.CurrentWeek.Month) flag = true;
+            else if (user.CurrentWeek.Date - Heath.CurrentWeek.Date >= 6) flag = true;
 
             if (flag == false)
             {
                 var filter = Builders<Users>.Filter.And(
                     Builders<Users>.Filter.Eq("Username", "Heath"),
-                    Builders<Users>.Filter.ElemMatch(x => x.WeeklyStats, y => y.Date == 25) );
+                    Builders<Users>.Filter.ElemMatch(x => x.WeeklyStats, y => y.Date == user.CurrentWeek.Date));
                 var update = new UpdateDefinitionBuilder<Users>()
-                    .Set($"WeeklyStats.$.{dayOfWeek}", newDay);
+                    .Set($"WeeklyStats.$.{dayOfWeek}", newDay)
+                    .Set($"WeeklyStats.$.Date", user.CurrentWeek.Date);
 
                 _users.UpdateOne(filter, update);
             }
@@ -98,6 +67,7 @@ namespace Exercise.Services
                 var update = Builders<Users>.Update
                     .Set("CurrentWeek", user.CurrentWeek)
                     .Push("WeeklyStats", user.WeeklyStats[0]);
+
                 _users.UpdateOne(filter, update);
             }
 
