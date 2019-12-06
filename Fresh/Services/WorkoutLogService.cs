@@ -37,8 +37,6 @@ namespace Exercise.Services
             );
             document = _users.Find(filter).ToList();
 
-            Console.WriteLine("\n\n\n {0} {1} \n\n\n", week, document);
-
             return document;
         }
 
@@ -65,8 +63,6 @@ namespace Exercise.Services
             WorkoutLogTools tools = new WorkoutLogTools();
 
             tools.DaySelector(user.WeeklyStats[0], user.CurrentWeek.Day, out newDay);
-
-            Console.WriteLine("\n\n\n {0} \n\n\n", newDay.UpperBody);
 
             if (user.CurrentWeek.Year != Heath.CurrentWeek.Year) flag = true;
             else if (user.CurrentWeek.Month != Heath.CurrentWeek.Month) flag = true;

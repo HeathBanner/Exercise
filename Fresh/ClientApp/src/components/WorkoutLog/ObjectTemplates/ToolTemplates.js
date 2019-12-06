@@ -7,14 +7,14 @@ const subLog = {
 };
 
 export const routineTemplate = {
-    PushUps: { ...subLog },
-    BenchPress: { ...subLog },
-    PullUps: { ...subLog },
-    BentOverRow: { ...subLog },
-    ShoulderPress: { ...subLog },
-    DeadLift: { ...subLog },
-    BackSquat: { ...subLog },
-    WalkingLunge: { ...subLog },
-    FrontPlank: { ...subLog },
-    SeatedHamstringCurl: { ...subLog },
+    pushUps: { ...subLog },
+    benchPress: { ...subLog },
+    pullUp: { ...subLog },
+    bentOverRow: { ...subLog },
+    shoulderPress: { ...subLog },
+    deadLift: { ...subLog },
+    backSquat: { ...subLog },
+    walkingLunge: { ...subLog },
+    frontPlank: { ...subLog },
+    seatedHamstringCurl: { ...subLog },
 };
