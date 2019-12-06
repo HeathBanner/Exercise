@@ -1,7 +1,8 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 
 import MenuTabs from './MenuTabs';
 import ProgressChart from './ProgressChart';
+import GainLoss from './GainLoss';
 
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -32,12 +33,30 @@ export default () => {
     const classes = useStyles();
 
     const [value, setValue] = useState(0);
+    const [logs, setLogs] = useState(null);
+
+    useEffect(() => {
+        getLog();
+    }, []);
+
+    const getLog = async () => {
+        const res = await fetch("api/workoutlog?date=5");
+        const json = await res.json();
+
+        if (json) {
+            const arrLength = json[0].weeklyStats.length - 1;
+
+            setLogs({
+                current: json[0].weeklyStats[arrLength],
+                last: json[0].weeklyStats[arrLength - 1]
+            });
+        }
+    };
 
     const handleChange = (newValue) => setValue(newValue);
 
     return (
         <Grid className={classes.container} item xs={12}>
-
             <MenuTabs handleChange={handleChange} value={value} />
 
             <Typography
@@ -49,6 +68,7 @@ export default () => {
 
             <ProgressChart />
 
+            <GainLoss logs={logs} />
         </Grid>
     );
 };

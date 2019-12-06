@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import VerticalTabs from './VerticalTabs';
 import LoggingTool from './LoggingTool';
 import API from '../Notifications/API';
+
 import { dateTemplate } from './ObjectTemplates/ToolTemplates';
 import Template from '../../progressTemplate';
 
@@ -23,7 +24,6 @@ const useStyles = makeStyles((theme) => ({
     },
     button: {
         width: '100%',
-
     }
 }));
 
@@ -46,7 +46,7 @@ export default () => {
     useEffect(async() => {
         const res = await fetch('getworkout');
         const json = await res.json();
-
+        console.log(json);
         dispatch({ type: 'NEW', payload: json });
         setCurrent({ ...json[0] });
     }, [])
@@ -84,11 +84,12 @@ export default () => {
             Month: today.getMonth() + 1,
             Year: today.getFullYear(),
             Date: today.getDate(),
-            Day: dateTemplate[today.getDay()]
+            Day: "Thursday"
+            //Day: dateTemplate[today.getDay()]
         };
     };
 
-    const handleSubmit = async() => {
+    const handleSubmit = async () => {
         const currentDate = getDate();
         const newLog = {
             Username: 'Heath',
@@ -97,7 +98,7 @@ export default () => {
                 {
                     [currentDate.Day]: {
                         UpperBody: {
-                            ...current,
+                            ...current.upperBody,
                             Routine: current.title,
                             Calories: getCalories(),
                             Date: currentDate
@@ -107,6 +108,8 @@ export default () => {
                 }
             ]
         };
+        console.log(newLog);
+
         const options = {
             method: 'POST',
             body: JSON.stringify(newLog),

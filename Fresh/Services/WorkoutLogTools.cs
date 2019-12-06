@@ -21,7 +21,7 @@ namespace Exercise.Services
                 case "Wednesday":
                     newDay = week.Wednesday;
                     break;
-                case "Thurday":
+                case "Thursday":
                     newDay = week.Thursday;
                     break;
                 case "Friday":

@@ -28,6 +28,20 @@ namespace Exercise.Services
             return document;
         }
 
+        public List<Users> Get(int week, out List<Users> document)
+        {
+            int lastWeek = week - 7;
+            var filter = Builders<Users>.Filter.And(
+                Builders<Users>.Filter.Eq("Username", "Heath"),
+                Builders<Users>.Filter.ElemMatch(x => x.WeeklyStats, y => y.Date == week)
+            );
+            document = _users.Find(filter).ToList();
+
+            Console.WriteLine("\n\n\n {0} {1} \n\n\n", week, document);
+
+            return document;
+        }
+
         public WorkoutLog Create(WorkoutLog log)
         {
             _logs.InsertOne(log);
@@ -38,26 +52,33 @@ namespace Exercise.Services
         {
             var result = _users.Find(new BsonDocument()).ToList();
             var Heath = result[0];
+
             var dayOfWeek = user.CurrentWeek.Day;
+            int date = user.CurrentWeek.Date;
+            int diff = date - 1;
+
             var flag = false;
+            string[] Days = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+
 
             Week newDay;
             WorkoutLogTools tools = new WorkoutLogTools();
 
             tools.DaySelector(user.WeeklyStats[0], user.CurrentWeek.Day, out newDay);
 
+            Console.WriteLine("\n\n\n {0} \n\n\n", newDay.UpperBody);
+
             if (user.CurrentWeek.Year != Heath.CurrentWeek.Year) flag = true;
             else if (user.CurrentWeek.Month != Heath.CurrentWeek.Month) flag = true;
-            else if (user.CurrentWeek.Date - Heath.CurrentWeek.Date >= 6) flag = true;
+            else if (user.CurrentWeek.Date - Heath.CurrentWeek.Date >= 7) flag = true;
 
             if (flag == false)
             {
                 var filter = Builders<Users>.Filter.And(
                     Builders<Users>.Filter.Eq("Username", "Heath"),
-                    Builders<Users>.Filter.ElemMatch(x => x.WeeklyStats, y => y.Date == user.CurrentWeek.Date));
+                    Builders<Users>.Filter.ElemMatch(x => x.WeeklyStats, y => y.Date == diff));
                 var update = new UpdateDefinitionBuilder<Users>()
-                    .Set($"WeeklyStats.$.{dayOfWeek}", newDay)
-                    .Set($"WeeklyStats.$.Date", user.CurrentWeek.Date);
+                    .Set($"WeeklyStats.$.{dayOfWeek}", newDay);
 
                 _users.UpdateOne(filter, update);
             }

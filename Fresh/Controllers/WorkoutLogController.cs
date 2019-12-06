@@ -22,9 +22,21 @@ namespace Exercise.Controllers
             _logService = logService;
         }
 
+        //[HttpGet]
+        //public ActionResult<List<WorkoutLog>> Get() =>
+        //    _logService.Get();
+
         [HttpGet]
-        public ActionResult<List<WorkoutLog>> Get() =>
-            _logService.Get();
+        public ActionResult<List<Users>> Get([FromRoute] string route)
+        {
+            var page = HttpContext.Request.Query["date"].ToString();
+            int date = Convert.ToInt32(page);
+
+            List<Users> document;
+
+            _logService.Get(date, out document);
+            return document;
+        }
 
         [HttpPost]
         public ActionResult<WorkoutLog> Create([FromBody] WorkoutLog log)
