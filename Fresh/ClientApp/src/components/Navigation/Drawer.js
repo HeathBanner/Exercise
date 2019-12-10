@@ -47,6 +47,11 @@ const navList = [
         text: 'Progress',
         icon: 'trending_up',
         link: '/progress',
+    },
+    {
+        text: 'Goal',
+        icon: 'emoji_events',
+        link: '/goal'
     }
 ];
 

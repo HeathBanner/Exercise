@@ -28,16 +28,10 @@ namespace Exercise.Services
             return document;
         }
 
-        public List<Users> Get(int week, out List<Users> document)
+        public List<Users> Get(string username, out List<Users> document)
         {
-            int lastWeek = week - 7;
-            var filter = Builders<Users>.Filter.And(
-                Builders<Users>.Filter.Eq("Username", "Heath"),
-                Builders<Users>.Filter.ElemMatch(x => x.WeeklyStats, y => y.Date == week)
-            );
-            document = _users.Find(filter).ToList();
-
-            return document;
+            var filter = Builders<Users>.Filter.Eq("Username", username);
+            return document = _users.Find(filter).ToList();
         }
 
         public WorkoutLog Create(WorkoutLog log)
@@ -89,6 +83,36 @@ namespace Exercise.Services
             }
 
             return user;
+        }
+
+        public Goal setGoal(Goal goal)
+        {
+            var filter = Builders<Users>.Filter.Eq("Username", "Heath");
+            var update = Builders<Users>.Update.Set("Goal", goal);
+
+            _users.UpdateOne(filter, update);
+
+            return goal;
+        }
+
+        public List<Users> getByDate(LogDate date, out List<Users> document)
+        {
+
+            var filter = Builders<Users>.Filter.Eq("Username", "Heath");
+            List<Users> query = _users.Find(filter).ToList();
+
+            int arrSize = query.Count - 1;
+            bool flag = false;
+
+            if (query[arrSize].CurrentWeek.Year != date.Year) flag = true;
+            else if (query[arrSize].CurrentWeek.Month != date.Month) flag = true;
+            else if (query[arrSize].CurrentWeek.Date - date.Date <= 7) flag = true;
+
+            Console.WriteLine("\n\n\n {0} \n {1} \n {2} \n\n\n", flag, query[arrSize].CurrentWeek.Date, date.Date);
+
+            if (flag) return document = new List<Users>();
+
+            return document = query;
         }
     }
 }

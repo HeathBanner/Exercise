@@ -22,23 +22,37 @@ namespace Exercise.Controllers
             _logService = logService;
         }
 
-        //[HttpGet]
-        //public ActionResult<List<WorkoutLog>> Get() =>
-        //    _logService.Get();
-
         [HttpGet]
-        public ActionResult<List<Users>> Get([FromRoute] string route)
+        [Route("username={username}")]
+        public ActionResult<List<Users>> Get(string username)
         {
-            var page = HttpContext.Request.Query["date"].ToString();
-            int date = Convert.ToInt32(page);
+            List<Users> document;
+
+            _logService.Get(username, out document);
+            return document;
+        }
+
+        [Route("year={year}&month={month}&date={date}")]
+        public ActionResult<List<Users>> Get(int year, int month, int date)
+        {
+
+            Console.WriteLine("\n\n\n {0} \n {1} \n {2} \n\n\n", year, month, date);
+            LogDate today = new LogDate
+            {
+                Year = year,
+                Month = month,
+                Date = date
+            };
 
             List<Users> document;
 
-            _logService.Get(date, out document);
+            _logService.getByDate(today, out document);
+
             return document;
         }
 
         [HttpPost]
+        [Route("")]
         public ActionResult<WorkoutLog> Create([FromBody] WorkoutLog log)
         {
             _logService.Create(log);
@@ -46,11 +60,15 @@ namespace Exercise.Controllers
             return CreatedAtRoute("default", new { id = log.Id.ToString(), }, log);
         }
 
-        [HttpPost("{id}")]
-        public ActionResult<Users> Create([FromBody] Users user)
+        [Route("goal")]
+        public ActionResult<Goal> Create([FromBody] Goal goal)
         {
-            _logService.Create(user);
-            return CreatedAtRoute("default", new { id = user.Id.ToString(), }, user);
+            var query = HttpContext.Request.Query["service"].ToString();
+            Console.WriteLine("\n\n\n {0} \n\n\n", query);
+
+            _logService.setGoal(goal);
+
+            return CreatedAtRoute("default", new { goal = goal.Type }, goal);
         }
     }
 }

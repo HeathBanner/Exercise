@@ -2,10 +2,9 @@
 
 import { makeStyles } from '@material-ui/styles';
 import {
-    Paper,
+    Divider,
     Typography,
     CircularProgress,
-    Icon,
 } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -21,8 +20,13 @@ const useStyles = makeStyles((theme) => ({
     goalHeader: {
         width: '100%',
         textAlign: 'center',
-        marginBottom: 20,
         color: 'white',
+    },
+    divider: {
+        marginBlockStart: '0.5em',
+        width: '60%',
+        backgroundColor: 'rgb(255, 255, 255, 0.2)',
+        marginBottom: 20,
     },
     goalContainer: {
         position: 'relative',
@@ -31,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
         alignContent: 'center',
         alignItems: 'center',
         justifyContent: 'center',
+        marginTop: 20,
         marginBottom: 30,
     },
     circleNum: {
@@ -55,27 +60,47 @@ const useStyles = makeStyles((theme) => ({
         textAlign: 'center',
         marginBottom: 20,
     },
+    outdated: {
+        color: 'gray'
+    },
 }));
 
-export default () => {
+export default (props) => {
 
     const classes = useStyles();
 
+    const getProgress = () => {
+        const diff = props.logs.goal.target - props.data.current.total;
+        const avg = (parseInt(props.logs.goal.target) + parseInt(props.data.current.total)) / 2;
+        const result = (diff / avg) * 100
+        return Math.round(result);
+    };
+
+    if (!props.data.current) return "";
     return (
         <div className={classes.container}>
-
             <Typography
                 className={classes.goalHeader}
-                variant="h6"
+                variant="h5"
             >
                 Goal
             </Typography>
 
+            <Divider className={classes.divider} />
+
+            <Typography
+                variant="h6"
+                className={classes.goalHeader}
+            >
+                {props.logs.goal.type}
+            </Typography>
+
             <div className={classes.goalContainer}>
                 <CircularProgress
+                    className={props.logs.outdated ? classes.outdated : ""}
                     variant="static"
                     color="secondary"
-                    value={75}
+                    value={props.logs.outdated ? 100 : getProgress()}
                     size={100}
                 />
 
@@ -83,49 +108,14 @@ export default () => {
                     variant="h6"
                     className={classes.circleNum}
                 >
-                    75%
+                    {props.logs.outdated
+                        ?
+                        0
+                        :
+                    getProgress()}%
                 </Typography>
+
             </div>
-
-
-            <Paper className={classes.paper}>
-                <Typography
-                    className={classes.gainsHeader}
-                    variant="h6"
-                >
-                    Gains
-                </Typography>
-
-                <Typography>
-                    Bench Press: +5 Reps
-                </Typography>
-
-                <Icon
-                    style={{ color: 'green' }}
-                >
-                    trending_up
-                </Icon>
-            </Paper>
-
-            <Paper className={classes.paper}>
-                <Typography
-                    className={classes.gainsHeader}
-                    variant="h6"
-                >
-                    Losses
-                </Typography>
-
-                <Typography>
-                     Pull Ups: -2 Reps
-                </Typography>
-
-                <Icon
-                    style={{ color: 'red' }}
-                >
-                    trending_down
-                </Icon>
-            </Paper>
-
         </div>
     );
 };

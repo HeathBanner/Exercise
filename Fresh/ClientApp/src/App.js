@@ -7,6 +7,7 @@ import MyRoutines from './pages/Routines/MyRoutines';
 import EditWorkout from './pages/MyRoutines/EditWorkout';
 import Log from './pages/WorkoutLog/Log';
 import Progress from './pages/Progress/Progress';
+import Goal from './pages/Goal/Goal';
 
 import './custom.css'
 
@@ -20,6 +21,7 @@ export default () => {
             <Route path="/myroutines/:routine" component={EditWorkout} />
             <Route path="/workoutlog" component={Log} />
             <Route path="/progress" component={Progress} />
+            <Route path="/goal" component={Goal} />
         </Switch>
     );
 };

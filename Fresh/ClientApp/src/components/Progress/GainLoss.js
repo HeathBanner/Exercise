@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import React, { useEffect } from 'react';
 
 import { routineTemplate } from '../WorkoutLog/ObjectTemplates/ToolTemplates';
 
@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
+        marginBottom: 20,
     }
 }));
 
@@ -46,10 +47,8 @@ export default (props) => {
 
     const classes = useStyles();
 
-    const [values, setValues] = useState({ current: null, last: null, workouts: null });
-
     useEffect(() => {
-        if (!props.logs || values.current) return;
+        if (!props.logs.current || props.data.current) return;
         getGains();
     });
 
@@ -81,7 +80,7 @@ export default (props) => {
             return newList = UpperBodyUnion(current[key].upperBody, last[key].upperBody, newList);
         });
 
-        setValues({
+        props.handleData({
             current: { total: currentTotal },
             last: { total: lastTotal },
             workouts: { ...newList }
@@ -146,7 +145,7 @@ export default (props) => {
     };
 
     const IconGen = (item) => {
-        const { current, last } = values;
+        const { current, last } = props.data;
         switch (true) {
             case last.total > current.total:
                 return <Icon style={{ color: "red" }}>trending_down</Icon>;
@@ -161,7 +160,24 @@ export default (props) => {
         }
     };
 
-    if (!values.current) return "";
+    const renderGains = () => {
+       return Object.entries(props.data.workouts).map(([key, value]) => {
+
+            if (value.Reps) {
+                return (
+                    <div key={key} className={classes.workoutContainer}>
+                        <Typography>
+                            {key}: {value.Reps > 0 ? "+" : "-"}{value.Reps} Reps
+                            </Typography>
+                        <Icon>{IconGen(value.Reps)}</Icon>
+                    </div>
+                );
+            }
+            return "";
+        })
+    }
+
+    if (!props.data.current) return "";
     return (
         <div className={classes.container}>
         <Paper className={classes.paper}>
@@ -169,7 +185,7 @@ export default (props) => {
                 Calories Burned This Week:
             </Typography>
             <Typography>
-                {values.current.total}
+                {props.data.current.total}
             </Typography>
             <Icon>{IconGen()}</Icon>
 
@@ -177,28 +193,19 @@ export default (props) => {
                 Calories Burned Last Week:
             </Typography>
             <Typography>
-                {values.last.total}
+                {props.data.last.total}
             </Typography>
         </Paper>
 
         <Paper className={classes.paper}>
-            {Object.entries(values.workouts).map(([key, value]) => {
+                <Typography
+                    className={classes.gainsHeader}
+                    variant="h6"
+                >
+                    Gains
+                </Typography>
 
-                if (value.Reps) {
-                    return (
-                        <div key={key} className={classes.workoutContainer}>
-                            <Typography>
-                                {key}
-                            </Typography>
-                            <Typography>
-                                {value.Reps}
-                            </Typography>
-                            <Icon>{IconGen(value.Reps)}</Icon>
-                        </div>
-                    );
-                }
-                return "";
-            })}
+                {renderGains()}
         </Paper>
         </div>
     );
