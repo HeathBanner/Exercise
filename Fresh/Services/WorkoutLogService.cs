@@ -34,24 +34,17 @@ namespace Exercise.Services
             return document = _users.Find(filter).ToList();
         }
 
-        public WorkoutLog Create(WorkoutLog log)
-        {
-            _logs.InsertOne(log);
-            return log;
-        }
-
         public Users Create(Users user)
         {
             var result = _users.Find(new BsonDocument()).ToList();
             var Heath = result[0];
 
-            var dayOfWeek = user.CurrentWeek.Day;
+            string dayOfWeek = user.CurrentWeek.Day;
             int date = user.CurrentWeek.Date;
             int diff = date - 1;
 
             var flag = false;
-            string[] Days = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
-
+            string[] Days = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
 
             Week newDay;
             WorkoutLogTools tools = new WorkoutLogTools();
@@ -60,7 +53,7 @@ namespace Exercise.Services
 
             if (user.CurrentWeek.Year != Heath.CurrentWeek.Year) flag = true;
             else if (user.CurrentWeek.Month != Heath.CurrentWeek.Month) flag = true;
-            else if (user.CurrentWeek.Date - Heath.CurrentWeek.Date >= 7) flag = true;
+            else if (user.CurrentWeek.Date - Array.FindIndex(Days, d => d == dayOfWeek) != Heath.CurrentWeek.Date) flag = true;
 
             if (flag == false)
             {
@@ -107,8 +100,6 @@ namespace Exercise.Services
             if (query[arrSize].CurrentWeek.Year != date.Year) flag = true;
             else if (query[arrSize].CurrentWeek.Month != date.Month) flag = true;
             else if (query[arrSize].CurrentWeek.Date - date.Date <= 7) flag = true;
-
-            Console.WriteLine("\n\n\n {0} \n {1} \n {2} \n\n\n", flag, query[arrSize].CurrentWeek.Date, date.Date);
 
             if (flag) return document = new List<Users>();
 

@@ -84,8 +84,9 @@ export default () => {
             Month: today.getMonth() + 1,
             Year: today.getFullYear(),
             Date: today.getDate(),
-            Day: "Thursday"
-            //Day: dateTemplate[today.getDay()]
+            Day: dateTemplate[today.getDay()]
+            //Date: 12,
+            //Day: "Thursday"
         };
     };
 
@@ -103,8 +104,9 @@ export default () => {
                             Calories: getCalories(),
                             Date: currentDate
                         },
-                        TotalCalories: 2000
-                    }
+                        TotalCalories: 2000,
+                    },
+                    Date: currentDate.Date
                 }
             ]
         };

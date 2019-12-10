@@ -96,7 +96,6 @@ export default () => {
     };
 
     const handleChange = (newValue) => setValue(newValue);
-
     const handleData = (newData) => setData({ ...newData });
 
     return (

@@ -52,9 +52,11 @@ namespace Exercise.Controllers
         }
 
         [HttpPost]
-        [Route("")]
-        public ActionResult<WorkoutLog> Create([FromBody] WorkoutLog log)
+        [Route("{username}")]
+        public ActionResult<Users> Create(string username, [FromBody] Users log)
         {
+            Console.WriteLine("\n\n\n {0} \n\n\n", username);
+
             _logService.Create(log);
 
             return CreatedAtRoute("default", new { id = log.Id.ToString(), }, log);
