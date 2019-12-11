@@ -146,6 +146,7 @@ export default (props) => {
 
     const IconGen = (item) => {
         const { current, last } = props.data;
+
         switch (true) {
             case last.total > current.total:
                 return <Icon style={{ color: "red" }}>trending_down</Icon>;
@@ -156,48 +157,75 @@ export default (props) => {
             case item < 0:
                 return <Icon style={{ color: "red" }}>trending_down</Icon>;
             default:
-                return <Icon>trending_up</Icon>;
+                return <Icon>trending_flat</Icon>;
         }
     };
 
     const renderGains = () => {
-       return Object.entries(props.data.workouts).map(([key, value]) => {
-
+        let arr = [];
+        Object.entries(props.data.workouts).forEach(([key, value]) => {
             if (value.Reps) {
-                return (
+                if (value.Reps <= 0) return;
+                arr.push(
                     <div key={key} className={classes.workoutContainer}>
                         <Typography>
-                            {key}: {value.Reps > 0 ? "+" : "-"}{value.Reps} Reps
+                            {key}: +{value.Reps} Reps
                             </Typography>
                         <Icon>{IconGen(value.Reps)}</Icon>
                     </div>
                 );
             }
-            return "";
-        })
-    }
+            return;
+        });
+
+        return arr;
+    };
+
+    const renderLosses = () => {
+        let arr = [];
+        Object.entries(props.data.workouts).forEach(([key, value]) => {
+            if (value.Reps) {
+                if (value.Reps > 0) return;
+                arr.push(
+                    <div key={key} className={classes.workoutContainer}>
+                        <Typography>
+                            {key}: {value.Reps} Reps
+                            </Typography>
+                        <Icon>{IconGen(value.Reps)}</Icon>
+                    </div>
+                );
+            }
+            return;
+        });
+
+        return arr;
+    };
 
     if (!props.data.current) return "";
+
+    const gains = renderGains();
+    const losses = renderLosses();
+
     return (
         <div className={classes.container}>
-        <Paper className={classes.paper}>
-            <Typography className={classes.gainsHeader} variant="h6">
-                Calories Burned This Week:
-            </Typography>
-            <Typography>
-                {props.data.current.total}
-            </Typography>
-            <Icon>{IconGen()}</Icon>
+            <Paper className={classes.paper}>
+                <Typography className={classes.gainsHeader} variant="h6">
+                    Calories Burned This Week:
+                </Typography>
+                <Typography>
+                    {props.data.current.total}
+                </Typography>
+                <Icon>{IconGen()}</Icon>
 
-            <Typography className={classes.gainsHeader} variant="h6">
-                Calories Burned Last Week:
-            </Typography>
-            <Typography>
-                {props.data.last.total}
-            </Typography>
-        </Paper>
+                <Typography className={classes.gainsHeader} variant="h6">
+                    Calories Burned Last Week:
+                </Typography>
+                <Typography>
+                    {props.data.last.total}
+                </Typography>
+            </Paper>
 
-        <Paper className={classes.paper}>
+            <Paper className={classes.paper}>
                 <Typography
                     className={classes.gainsHeader}
                     variant="h6"
@@ -205,8 +233,19 @@ export default (props) => {
                     Gains
                 </Typography>
 
-                {renderGains()}
-        </Paper>
+                    {gains.length === 0 ? <Typography>No Gains This Week</Typography> : gains}
+            </Paper>
+
+            <Paper className={classes.paper}>
+                <Typography
+                    className={classes.gainsHeader}
+                    variant="h6"
+                >
+                    Losses
+                </Typography>
+
+                    {losses.length === 0 ? <Typography>No Losses This Week</Typography> : losses}
+            </Paper>
         </div>
     );
 };

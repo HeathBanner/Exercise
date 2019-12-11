@@ -1,3 +1,4 @@
+using Exercise.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -6,6 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
+using Exercise.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Exercise
 {
@@ -30,6 +34,22 @@ namespace Exercise
 
             services.AddSingleton<Services.ExerciseService>();
             services.AddSingleton<Services.WorkoutLogService>();
+
+            services.AddDbContext<AppDbContext>(config =>
+            {
+                config.UseInMemoryDatabase("Memory");
+            });
+
+            services.AddIdentity<Users, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddAuthentication("CookieAuth")
+                .AddCookie("CookieAuth", config =>
+                {
+                    config.Cookie.Name = "User.Cookie";
+                    config.LoginPath = "/authenticate";
+                });
 
             services.AddControllersWithViews();
 
@@ -60,11 +80,11 @@ namespace Exercise
 
             app.UseRouting();
 
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action}/{id?}");
+                endpoints.MapDefaultControllerRoute();
             });
 
             app.UseSpa(spa =>

@@ -70,9 +70,13 @@ export default (props) => {
     const classes = useStyles();
 
     const getProgress = () => {
-        const diff = props.logs.goal.target - props.data.current.total;
-        const avg = (parseInt(props.logs.goal.target) + parseInt(props.data.current.total)) / 2;
-        const result = (diff / avg) * 100
+        const target = parseInt(props.logs.goal.target);
+        const current = props.data.current.total;
+
+        const diff = (target - current) / target;
+        const result = 100 - Math.round(diff * 100);
+
+        if (result > 100) return 100;
         return Math.round(result);
     };
 
@@ -93,6 +97,13 @@ export default (props) => {
                 className={classes.goalHeader}
             >
                 {props.logs.goal.type}
+            </Typography>
+
+            <Typography
+                variant="h6"
+                className={classes.goalHeader}
+            >
+                {props.logs.goal.target}
             </Typography>
 
             <div className={classes.goalContainer}>

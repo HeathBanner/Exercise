@@ -92,6 +92,7 @@ export default () => {
 
     const handleSubmit = async () => {
         const currentDate = getDate();
+        const calories = getCalories();
         const newLog = {
             Username: 'Heath',
             CurrentWeek: currentDate,
@@ -101,17 +102,15 @@ export default () => {
                         UpperBody: {
                             ...current.upperBody,
                             Routine: current.title,
-                            Calories: getCalories(),
+                            Calories: calories,
                             Date: currentDate
                         },
-                        TotalCalories: 2000,
+                        TotalCalories: calories,
                     },
                     Date: currentDate.Date
                 }
             ]
         };
-        console.log(newLog);
-
         const options = {
             method: 'POST',
             body: JSON.stringify(newLog),

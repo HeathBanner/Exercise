@@ -41,10 +41,11 @@ namespace Exercise.Services
 
             string dayOfWeek = user.CurrentWeek.Day;
             int date = user.CurrentWeek.Date;
-            int diff = date - 1;
+            string[] Days = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+            int diff = user.CurrentWeek.Date - Array.FindIndex(Days, d => d == dayOfWeek);
 
             var flag = false;
-            string[] Days = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+
 
             Week newDay;
             WorkoutLogTools tools = new WorkoutLogTools();
@@ -53,7 +54,7 @@ namespace Exercise.Services
 
             if (user.CurrentWeek.Year != Heath.CurrentWeek.Year) flag = true;
             else if (user.CurrentWeek.Month != Heath.CurrentWeek.Month) flag = true;
-            else if (user.CurrentWeek.Date - Array.FindIndex(Days, d => d == dayOfWeek) != Heath.CurrentWeek.Date) flag = true;
+            else if (diff != Heath.CurrentWeek.Date) flag = true;
 
             if (flag == false)
             {

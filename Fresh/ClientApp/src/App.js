@@ -8,6 +8,7 @@ import EditWorkout from './pages/MyRoutines/EditWorkout';
 import Log from './pages/WorkoutLog/Log';
 import Progress from './pages/Progress/Progress';
 import Goal from './pages/Goal/Goal';
+import Auth from './pages/Auth/Auth';
 
 import './custom.css'
 
@@ -22,6 +23,7 @@ export default () => {
             <Route path="/workoutlog" component={Log} />
             <Route path="/progress" component={Progress} />
             <Route path="/goal" component={Goal} />
+            <Route path="/login" component={Auth} />
         </Switch>
     );
 };
