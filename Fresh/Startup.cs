@@ -30,6 +30,7 @@ namespace Exercise
 
             services.AddSingleton<Services.ExerciseService>();
             services.AddSingleton<Services.WorkoutLogService>();
+            services.AddSingleton<Services.AuthService>();
 
             services.AddControllersWithViews();
 

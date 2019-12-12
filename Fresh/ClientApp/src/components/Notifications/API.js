@@ -1,7 +1,7 @@
 ﻿import React from 'react';
 
 import { makeStyles } from '@material-ui/styles';
-import { green } from '@material-ui/core/colors';
+import { amber, green } from '@material-ui/core/colors';
 import {
     IconButton,
     Icon,
@@ -11,11 +11,17 @@ import {
 
 const useStyles = makeStyles((theme) => ({
     success: {
-        backgroundColor: green[600],
+        backgroundColor: green[600]
+    },
+    error: {
+        backgroundColor: "#eb4034"
+    },
+    warning: {
+        backgroundColor: amber[700]
     },
     message: {
         display: 'flex',
-        alignItems: 'center',
+        alignItems: 'center'
     },
 }));
 

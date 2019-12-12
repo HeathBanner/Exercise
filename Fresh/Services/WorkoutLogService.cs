@@ -41,9 +41,9 @@ namespace Exercise.Services
             string dayOfWeek = user.CurrentWeek.Day;
 
             Week newDay;
+            DaySelector(user.WeeklyStats[0], user.CurrentWeek.Day, out newDay);
 
             int diff = DayDiff(user.CurrentWeek.Date, dayOfWeek);
-            DaySelector(user.WeeklyStats[0], user.CurrentWeek.Day, out newDay);
             bool flag = checkDate(user.CurrentWeek, Heath.CurrentWeek, diff);
 
             if (flag == false)

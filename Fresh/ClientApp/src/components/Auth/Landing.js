@@ -1,7 +1,9 @@
 ﻿import React, { useState } from 'react';
 
-import Register from './Register';
+import Auth from './Auth';
 import Menu from './Menu';
+import Notification from '../Notifications/API';
+import { PreSubmit, Register } from './Services/Services';
 
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -35,27 +37,49 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const initState = {
+const initInfo = {
     username: "",
     email: "",
     password: ""
+};
+const initNotify = {
+    error: false,
+    success: false,
+    warning: false,
+    message: ""
 };
 
 export default () => {
 
     const classes = useStyles();
 
-    const [info, setInfo] = useState({ ...initState });
+    const [info, setInfo] = useState({ ...initInfo });
     const [tab, setTab] = useState(0);
+    const [notify, setNotify] = useState({ ...initNotify });
 
     const handleInput = (type) => event => {
         setInfo({ ...info, [type]: event.target.value });
     };
 
-    const handleSubmit = (type) => {
-        if (type === "login") return console.log(`User: ${info.username} is attempting to login`);
-        console.log(`User: ${info.username} is attemping to sign up!`);
+    const handleSubmit = async (type) => {
+        const flag = PreSubmit(info, type);
+
+        if (flag.warning) return setNotify({ ...notify, ...flag });
+        if (type === "signup") {
+            const response = await fRegister(info);
+
+            if (response.success) {
+                setInfo({ ...initInfo });
+                return setNotify({ ...notify, ...response });
+            }
+
+            return setNotify({ ...notify, ...response });
+        }
+        
+
     };
+
+    const handleClose = () => setNotify({ ...initNotify });
 
     const handleTabs = (event, value) => setTab(value);
 
@@ -68,7 +92,7 @@ export default () => {
                 {tab === 0
                     ?
 
-                    <Register render={data => (
+                    <Auth render={data => (
                         <>
                             <TextField
                                 className={data.classes.fields}
@@ -106,7 +130,7 @@ export default () => {
 
                     :
 
-                    <Register render={data => (
+                    <Auth render={data => (
                         <>
                             <TextField
                                 className={data.classes.fields}
@@ -136,6 +160,11 @@ export default () => {
                     )} /> }
 
             </Paper>
+
+            <Notification
+                notification={notify}
+                handleClose={handleClose}
+            />
         </Grid>
     );
 };

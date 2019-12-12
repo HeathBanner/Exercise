@@ -55,8 +55,6 @@ namespace Exercise.Controllers
         [Route("goal")]
         public ActionResult<Goal> Create([FromBody] Goal goal)
         {
-            var query = HttpContext.Request.Query["service"].ToString();
-
             _logService.setGoal(goal);
 
             return CreatedAtRoute("default", new { goal = goal.Type }, goal);
