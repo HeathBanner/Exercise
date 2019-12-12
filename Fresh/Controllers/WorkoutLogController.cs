@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Exercise.Models;
 using Exercise.Services;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using System.Diagnostics;
 
 namespace Exercise.Controllers
 {
@@ -35,15 +30,12 @@ namespace Exercise.Controllers
         [Route("year={year}&month={month}&date={date}")]
         public ActionResult<List<Users>> Get(int year, int month, int date)
         {
-
-            Console.WriteLine("\n\n\n {0} \n {1} \n {2} \n\n\n", year, month, date);
             LogDate today = new LogDate
             {
                 Year = year,
                 Month = month,
                 Date = date
             };
-
             List<Users> document;
 
             _logService.getByDate(today, out document);
@@ -64,7 +56,6 @@ namespace Exercise.Controllers
         public ActionResult<Goal> Create([FromBody] Goal goal)
         {
             var query = HttpContext.Request.Query["service"].ToString();
-            Console.WriteLine("\n\n\n {0} \n\n\n", query);
 
             _logService.setGoal(goal);
 

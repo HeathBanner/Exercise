@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using System.Collections.Generic;
@@ -8,7 +7,7 @@ using Exercise.Models;
 
 namespace Exercise.Services
 {
-    public class WorkoutLogService
+    public class WorkoutLogService : WorkoutLogTools
     {
         private readonly IMongoCollection<WorkoutLog> _logs;
         private readonly IMongoCollection<Users> _users;
@@ -40,21 +39,12 @@ namespace Exercise.Services
             var Heath = result[0];
 
             string dayOfWeek = user.CurrentWeek.Day;
-            int date = user.CurrentWeek.Date;
-            string[] Days = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
-            int diff = user.CurrentWeek.Date - Array.FindIndex(Days, d => d == dayOfWeek);
-
-            var flag = false;
-
 
             Week newDay;
-            WorkoutLogTools tools = new WorkoutLogTools();
 
-            tools.DaySelector(user.WeeklyStats[0], user.CurrentWeek.Day, out newDay);
-
-            if (user.CurrentWeek.Year != Heath.CurrentWeek.Year) flag = true;
-            else if (user.CurrentWeek.Month != Heath.CurrentWeek.Month) flag = true;
-            else if (diff != Heath.CurrentWeek.Date) flag = true;
+            int diff = DayDiff(user.CurrentWeek.Date, dayOfWeek);
+            DaySelector(user.WeeklyStats[0], user.CurrentWeek.Day, out newDay);
+            bool flag = checkDate(user.CurrentWeek, Heath.CurrentWeek, diff);
 
             if (flag == false)
             {
@@ -91,19 +81,15 @@ namespace Exercise.Services
 
         public List<Users> getByDate(LogDate date, out List<Users> document)
         {
-
             var filter = Builders<Users>.Filter.Eq("Username", "Heath");
             List<Users> query = _users.Find(filter).ToList();
 
             int arrSize = query.Count - 1;
-            bool flag = false;
 
-            if (query[arrSize].CurrentWeek.Year != date.Year) flag = true;
-            else if (query[arrSize].CurrentWeek.Month != date.Month) flag = true;
-            else if (query[arrSize].CurrentWeek.Date - date.Date <= 7) flag = true;
+            int diff = DayDiff(date.Date, date.Day);
+            bool flag = checkDate(query[arrSize].CurrentWeek, date, diff);
 
             if (flag) return document = new List<Users>();
-
             return document = query;
         }
     }

@@ -3,7 +3,7 @@ using Exercise.Models;
 
 namespace Exercise.Services
 {
-    class WorkoutLogTools
+    public class WorkoutLogTools
     {
         public Week DaySelector(WeeklyStats week, string day, out Week newDay)
         {
@@ -34,6 +34,23 @@ namespace Exercise.Services
             Console.WriteLine("\n\n\n {0} \n\n\n", day);
 
             return newDay;
+        }
+
+        public int DayDiff(int date, string day)
+        {
+            string[] Days = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+            int diff = date - Array.FindIndex(Days, d => d == day);
+
+            return diff;
+        }
+
+        public bool checkDate(LogDate body, LogDate query, int diff)
+        {
+            if (body.Year != query.Year) return true;
+            else if (body.Month != query.Month) return true;
+            else if (diff != query.Date) return true;
+
+            return false;
         }
     }
 }
