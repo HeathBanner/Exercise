@@ -27,14 +27,17 @@ namespace Exercise.Controllers
         [Route("register")]
         public HttpResponseMessage Create([FromBody] Users user)
         {
-            bool result = _authService.Create(user);
+            HttpResponseMessage result = _authService.Create(user);
 
-            if (!result)
-            {
-                return new HttpResponseMessage(HttpStatusCode.Forbidden);
-            }
+            return result;
+        }
 
-            return new HttpResponseMessage(HttpStatusCode.OK);
+        [Route("login")]
+        public HttpResponseMessage Verify([FromBody] Users user)
+        {
+            HttpResponseMessage result = _authService.Verify(user);
+
+            return result;
         }
     }
 }

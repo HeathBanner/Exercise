@@ -19,7 +19,12 @@ const newRoutine = (state, action) => {
             return {
                 ...state,
                 loaded: false,
-            }
+            };
+        case "LOGIN":
+            return {
+                ...state,
+                loggedIn: true
+            };
         default:
             return state;
     }
@@ -29,6 +34,7 @@ const initState = {
     list: null,
     empty: true,
     loaded: false,
+    loggedIn: false,
 };
 
 export const store = createStore(newRoutine, initState);

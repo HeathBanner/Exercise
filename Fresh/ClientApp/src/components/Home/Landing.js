@@ -1,4 +1,5 @@
-﻿import React from 'react';
+﻿import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -27,6 +28,11 @@ const useStyles = makeStyles((theme) => ({
 export default () => {
 
     const classes = useStyles();
+    const store = useSelector(state => state);
+
+    useEffect(() => {
+        console.log(store);
+    }, [store]);
 
     return (
         <Grid

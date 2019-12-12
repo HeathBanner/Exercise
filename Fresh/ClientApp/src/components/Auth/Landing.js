@@ -1,9 +1,11 @@
 ﻿import React, { useState } from 'react';
+import { withRouter } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import Auth from './Auth';
 import Menu from './Menu';
 import Notification from '../Notifications/API';
-import { PreSubmit, Register } from './Services/Services';
+import { PreSubmit, fetchAuth, InitInfo, InitNotify } from './Services/Services';
 
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -37,25 +39,14 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const initInfo = {
-    username: "",
-    email: "",
-    password: ""
-};
-const initNotify = {
-    error: false,
-    success: false,
-    warning: false,
-    message: ""
-};
-
-export default () => {
+const Landing = ({ history }) => {
 
     const classes = useStyles();
+    const dispatch = useDispatch();
 
-    const [info, setInfo] = useState({ ...initInfo });
+    const [info, setInfo] = useState({ ...InitInfo });
     const [tab, setTab] = useState(0);
-    const [notify, setNotify] = useState({ ...initNotify });
+    const [notify, setNotify] = useState({ ...InitNotify });
 
     const handleInput = (type) => event => {
         setInfo({ ...info, [type]: event.target.value });
@@ -66,20 +57,33 @@ export default () => {
 
         if (flag.warning) return setNotify({ ...notify, ...flag });
         if (type === "signup") {
-            const response = await fRegister(info);
+            const response = await fetchAuth(info, "register");
 
             if (response.success) {
-                setInfo({ ...initInfo });
+                setInfo({ ...InitInfo });
                 return setNotify({ ...notify, ...response });
             }
 
             return setNotify({ ...notify, ...response });
         }
-        
 
+        const obj = { username: info.username, password: info.password };
+        const response = await fetchAuth(obj, "login");
+
+        if (response.success) {
+            dispatch({ type: "LOGIN" });
+            setInfo({ ...InitInfo });
+            return setNotify({ ...notify, ...response });
+        }
+        
+        return setNotify({ ...notify, ...response });
     };
 
-    const handleClose = () => setNotify({ ...initNotify });
+    const handleClose = () => {
+        if (notify.success) return history.push("/");
+
+        setNotify({ ...InitNotify });
+    };
 
     const handleTabs = (event, value) => setTab(value);
 
@@ -91,40 +95,27 @@ export default () => {
 
                 {tab === 0
                     ?
-
                     <Auth render={data => (
                         <>
-                            <TextField
-                                className={data.classes.fields}
-                                value={info.username}
-                                onChange={handleInput("username")}
-                                label="username"
-                            />
-
-                            <TextField
-                                className={data.classes.fields}
-                                value={info.email}
-                                onChange={handleInput("email")}
-                                label="email"
-                            />
-
-                            <TextField
-                                className={data.classes.fields}
-                                value={info.password}
-                                onChange={handleInput("password")}
-                                type={data.show ? "text" : "password"}
-                                label="password"
-                                InputProps={{
-                                    endAdornment: data.showButton(data.show, data.handleShow, data.handleDown)
-                                }}
-                            />
-
+                            {["username", "email", "password"].map((item) => {
+                                return <TextField
+                                    className={data.classes.fields}
+                                    value={info[item]}
+                                    onChange={handleInput(item)}
+                                    label={item}
+                                    type={item !== "password" ? "text" : data.show ? "text" : "password"}
+                                    InputProps={{
+                                        endAdornment: item === "password" ? data.showButton(data.show, data.handleShow, data.handleDown) : ""
+                                    }}
+                                />;
+                            })}
+                            
                             <Button
                                 className={data.classes.button}
                                 onClick={() => handleSubmit("signup")}
                             >
                                 Submit
-                        </Button>
+                            </Button>
                         </>
                     )} />
 
@@ -132,23 +123,18 @@ export default () => {
 
                     <Auth render={data => (
                         <>
-                            <TextField
-                                className={data.classes.fields}
-                                value={info.email}
-                                onChange={handleInput("email")}
-                                label="email"
-                            />
-
-                            <TextField
-                                className={data.classes.fields}
-                                value={info.password}
-                                onChange={handleInput("password")}
-                                type={data.show ? "text" : "password"}
-                                label="password"
-                                InputProps={{
-                                    endAdornment: data.showButton(data.show, data.handleShow, data.handleDown)
-                                }}
-                            />
+                            {["username", "password"].map((item) => {
+                                return <TextField
+                                    className={data.classes.fields}
+                                    value={info[item]}
+                                    onChange={handleInput(item)}
+                                    label={item}
+                                    type={item !== "password" ? "text" : data.show ? "text" : "password"}
+                                    InputProps={{
+                                        endAdornment: item === "password" ? data.showButton(data.show, data.handleShow, data.handleDown) : ""
+                                    }}
+                                />;
+                            })}
 
                             <Button
                                 className={data.classes.button}
@@ -158,7 +144,6 @@ export default () => {
                             </Button>
                         </>
                     )} /> }
-
             </Paper>
 
             <Notification
@@ -168,3 +153,5 @@ export default () => {
         </Grid>
     );
 };
+
+export default withRouter(Landing);
