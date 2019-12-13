@@ -4,6 +4,8 @@ using MongoDB.Bson;
 using System.Collections.Generic;
 using System.Linq;
 using Exercise.Models;
+using System.Net.Http;
+using System.Net;
 
 namespace Exercise.Services
 {
@@ -33,7 +35,7 @@ namespace Exercise.Services
             return document = _users.Find(filter).ToList();
         }
 
-        public Users Create(Users user)
+        public HttpResponseMessage Create(Users user)
         {
             var result = _users.Find(new BsonDocument()).ToList();
             var Heath = result[0];
@@ -54,7 +56,7 @@ namespace Exercise.Services
                 var update = new UpdateDefinitionBuilder<Users>()
                     .Set($"WeeklyStats.$.{dayOfWeek}", newDay);
 
-                _users.UpdateOne(filter, update);
+                _users.FindOneAndUpdate(filter, update);
             }
             if (flag == true)
             {
@@ -66,17 +68,25 @@ namespace Exercise.Services
                 _users.UpdateOne(filter, update);
             }
 
-            return user;
+            return new HttpResponseMessage(HttpStatusCode.Created);
         }
 
-        public Goal setGoal(Goal goal)
+        public HttpResponseMessage setGoal(Goal goal)
         {
             var filter = Builders<Users>.Filter.Eq("Username", "Heath");
+            var options = new FindOneAndUpdateOptions<Users>()
+            {
+                ReturnDocument = ReturnDocument.After
+            };
             var update = Builders<Users>.Update.Set("Goal", goal);
 
-            _users.UpdateOne(filter, update);
+            var result = _users.FindOneAndUpdate(filter, update, options);
 
-            return goal;
+            if (result.Goal.Target != goal.Target)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotModified);
+            }
+            return new HttpResponseMessage(HttpStatusCode.Created);
         }
 
         public List<Users> getByDate(LogDate date, out List<Users> document)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Exercise.Models;
 using Exercise.Services;
+using System.Net.Http;
 
 namespace Exercise.Controllers
 {
@@ -45,19 +46,19 @@ namespace Exercise.Controllers
 
         [HttpPost]
         [Route("{username}")]
-        public ActionResult<Users> Create(string username, [FromBody] Users log)
+        public HttpResponseMessage Create(string username, [FromBody] Users log)
         {
-            _logService.Create(log);
+            var response = _logService.Create(log);
 
-            return CreatedAtRoute("default", new { id = log.Id.ToString(), }, log);
+            return response;
         }
 
         [Route("goal")]
-        public ActionResult<Goal> Create([FromBody] Goal goal)
+        public HttpResponseMessage Create([FromBody] Goal goal)
         {
-            _logService.setGoal(goal);
+            var response = _logService.setGoal(goal);
 
-            return CreatedAtRoute("default", new { goal = goal.Type }, goal);
+            return response;
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿import React, { useState } from 'react';
 
+import Notification from '../Notifications/API';
+
 import { makeStyles } from '@material-ui/styles';
 import {
     Grid,
@@ -60,16 +62,29 @@ const useStyles = makeStyles((theme) => ({
         transform: 'translate(-50%, -50%)',
         color: 'white',
     }
-}))
+}));
+
+const initGoal = {
+    type: "",
+    target: ""
+};
+const initNotify = {
+    error: false,
+    success: false,
+    warning: false,
+    message: ""
+};
 
 export default () => {
 
     const classes = useStyles();
 
-    const [goal, setGoal] = useState({ type: "", target: "" });
+    const [goal, setGoal] = useState({ ...initGoal });
+    const [notify, setNotify] = useState({ ...initNotify });
 
     const handleChange = (event) => setGoal({ ...goal, type: event.target.value });
     const handleInput = (event) => setGoal({ ...goal, target: event.target.value });
+
     const onSubmit = async () => {
         const options = {
             method: 'POST',
@@ -79,7 +94,15 @@ export default () => {
         const res = await fetch('api/workoutlog/goal', options);
         const json = await res.json();
 
-        if (json) console.log(json);
+        if (json.statusCode === 304) {
+            return setNotify({ ...notify, error: true, message: "Something went wrong :(" });
+        }
+        return setNotify({ ...notify, success: true, message: "Goal has been saved!" });
+    };
+
+    const handleClose = () => {
+        setNotify({ ...initNotify });
+        setGoal({ ...initGoal });
     };
 
     const getProgress = () => {
@@ -128,6 +151,11 @@ export default () => {
                     Done
                 </Button>
             </div>
+
+            <Notification
+                notification={notify}
+                handleClose={handleClose}
+            />
         </Grid>
     );
 };
