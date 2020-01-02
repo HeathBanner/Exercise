@@ -5,19 +5,37 @@ import {
     Grid,
     Typography,
     Button,
+    Paper
 } from '@material-ui/core';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     container: {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         alignContent: 'center',
         flexWrap: 'wrap',
-        height: '100vh',
-        padding: '15% 25%',
+        padding: '15% 5%',
+        backgroundColor: '#41B3A3'
+    },
+    paper: {
+        padding: '10%',
+        display: 'flex',
+        alignItems: 'center',
+        alignContent: 'center',
+        justifyItems: 'center',
+        flexWrap: 'wrap',
+        width: '90%'
+    },
+    header: {
+        width: '100%',
+        marginBottom: 20,
+        color: '#85CDCA'
     },
     link: {
+        display: 'flex',
+        justifyContent: 'center',
+        width: '100%',
         textDecoration: 'none',
         color: 'inherit',
         '&:hover': {
@@ -25,6 +43,12 @@ const useStyles = makeStyles((theme) => ({
             color: 'inherit',
         },
     },
+    button: {
+        width: '100%',
+        padding: 10,
+        color: 'white',
+        backgroundColor: '#E8A87C'
+    }
 }));
 
 export default () => {
@@ -37,26 +61,23 @@ export default () => {
             item
             xs={12}
         >
+            <Paper className={classes.paper}>
+                <Typography
+                    className={classes.header}
+                    variant="h4"
+                    align="center"
+                >
+                    Follow our routines or create your own!
+                </Typography>
 
-            <Typography
-                style={{ width: '100%' }}
-                variant="h4"
-                align="center"
-            >
-                Follow our routines or create your own!
-            </Typography>
-
-            <a
-                className={classes.link}
-                href="/routines"
-            >
-                <Button>
-                    <Typography>
-                        Click here to begin
-                    </Typography>
-                </Button>
-            </a>
-
+                <a className={classes.link} href="/routines">
+                    <Button className={classes.button}>
+                        <Typography>
+                            Click here to begin
+                        </Typography>
+                    </Button>
+                </a>
+            </Paper>
         </Grid>
     );
 };

@@ -13,7 +13,7 @@ import {
 const useStyles = makeStyles((theme) => ({
     paper: {
         position: 'relative',
-        width: '90%',
+        width: '100%',
         padding: '5%',
         marginTop: 20,
         display: 'flex',

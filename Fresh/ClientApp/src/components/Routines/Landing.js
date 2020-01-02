@@ -16,18 +16,22 @@ import {
     Fade
 } from '@material-ui/core';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     container: {
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center',
-        alignContent: 'center',
+        alignItems: 'flex-start',
+        alignContent: 'flex-start',
         flexWrap: 'wrap',
+        backgroundColor: '#41B3A3',
+        height: '100vh',
+        overflowX: 'scroll',
+        padding: '5%'
     },
     modal: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
     paper: {
         display: 'flex',
@@ -36,14 +40,15 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
         flexWrap: 'wrap',
         padding: '10%',
-        width: '90%',
+        width: '100%'
     },
     buildButton: {
+        width: '100%',
         marginTop: 20,
-        padding: 10,
-        backgroundColor: 'rgb(0, 0, 0, 0.8)',
-        color: 'rgb(255, 255, 255, 0.8)',
-    },
+        padding: 15,
+        backgroundColor: '#E8A87C',
+        color: 'rgb(255, 255, 255)'
+    }
 }));
 
 export default () => {
@@ -59,14 +64,15 @@ export default () => {
         setConfirmation({ open: true, title: title });
     }
 
-    const handleDeleteRequest = () => {
-        fetch(`/getworkout/${confirmation.title}`, {
-            method: 'DELETE',
-        })
-            .then(() => {
-                fetchRoutines();
-                setConfirmation({ open: false, title: '' });
-            });
+    const handleDeleteRequest = async () => {
+        const options = { method: 'DELETE' };
+        const res = await fetch(`/getworkout/${confirmation.title}`, options);
+        const json = await res.json();
+
+        // Implement Error Catching
+
+        fetchRoutines();
+        setConfirmation({ open: false, title: '' });
     };
 
     useEffect(() => {
@@ -75,20 +81,16 @@ export default () => {
         fetchRoutines();
     }, [reduxStore]);
 
-    const fetchRoutines = () => {
-        fetch('getworkout')
-            .then(res => res.json())
-            .then((result) => {
-                if (!result[0]) {
-                    return dispatch({ type: 'EMPTY' });
-                }
-                dispatch({ type: 'NEW', payload: result });
-            });
+    const fetchRoutines = async () => {
+        const res = await fetch('getworkout');
+        const json = await res.json();
+        
+        if (!json[0]) return dispatch({ type: 'EMPTY' });
+
+        dispatch({ type: 'NEW', payload: json });
     };
 
-    const handleBuilder = (type) => {
-        setBuilder(type);
-    };
+    const handleBuilder = (type) => setBuilder(type);
 
     if (!reduxStore.loaded) {
         return (

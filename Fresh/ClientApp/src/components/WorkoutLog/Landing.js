@@ -120,11 +120,13 @@ export default () => {
         const res = await fetch(`api/workoutlog/Heath`, options);
         const json = await res.json();
 
+        console.log(json);
+
         if (json.statusCode === 201) {
-            setNotification({ ...notification, success: true, message: 'Workout has been logged!' });
+            return setNotification({ ...notification, success: true, message: 'Workout has been logged!' });
         }
 
-        return setNotification({ ...notification, success: true, message: "Something went wrong :(" });
+        setNotification({ ...notification, success: true, message: "Something went wrong :(" });
     };
 
     return (

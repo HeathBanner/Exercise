@@ -59,9 +59,11 @@ export default () => {
             date: fnDate.getDate(),
             day: week[fnDate.getDay() - 1]
         };
+        console.log(today)
         const { year, month, date } = json.currentWeek;
         let flag = false;
 
+        if (today.year === year && today.month === month && today.date === date) return false;
         if (today.year !== year) flag = true;
         if (today.month !== month) flag = true;
         if (today.date - week.indexOf(today.day) !== date) flag = true;
@@ -73,6 +75,8 @@ export default () => {
     const getLog = async () => {
         const res = await fetch(`api/workoutlog/username=Heath`);
         const json = await res.json();
+
+        console.log(json);
 
         if (json) {
             const arrLength = json[0].weeklyStats.length - 1;

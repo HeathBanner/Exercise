@@ -145,13 +145,8 @@ export default (props) => {
     };
 
     const IconGen = (item) => {
-        const { current, last } = props.data;
-
+        console.log(item);
         switch (true) {
-            case last.total > current.total:
-                return <Icon style={{ color: "red" }}>trending_down</Icon>;
-            case last.total < current.total:
-                return <Icon style={{ color: "green" }}>trending_up</Icon>;
             case item > 0:
                 return <Icon style={{ color: "green" }}>trending_up</Icon>;
             case item < 0:
@@ -170,7 +165,8 @@ export default (props) => {
                     <div key={key} className={classes.workoutContainer}>
                         <Typography>
                             {key}: +{value.Reps} Reps
-                            </Typography>
+                        </Typography>
+
                         <Icon>{IconGen(value.Reps)}</Icon>
                     </div>
                 );

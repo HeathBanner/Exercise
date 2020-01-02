@@ -9,14 +9,13 @@ import { PreSubmit, fetchAuth, InitInfo, InitNotify } from './Services/Services'
 
 import { makeStyles } from '@material-ui/styles';
 import {
-    Grid,
     Paper,
     TextField,
     Button
 } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
-    container: {
+    paper: {
         position: 'fixed',
         top: '50%',
         left: '50%',
@@ -26,16 +25,7 @@ const useStyles = makeStyles(() => ({
         alignItems: 'center',
         justifyContent: 'center',
         flexWrap: 'wrap',
-        padding: '10%',
-        width: '100%',
-    },
-    paper: {
-        display: 'flex',
-        alignContent: 'center',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexWrap: 'wrap',
-        width: '100%'
+        width: '90%'
     },
 }));
 
@@ -71,7 +61,10 @@ const Landing = ({ history }) => {
         const response = await fetchAuth(obj, "login");
 
         if (response.success) {
-            dispatch({ type: "LOGIN" });
+            dispatch({
+                type: "LOGIN",
+                payload: { username: info.username }
+            });
             setInfo({ ...InitInfo });
             return setNotify({ ...notify, ...response });
         }
@@ -88,7 +81,7 @@ const Landing = ({ history }) => {
     const handleTabs = (event, value) => setTab(value);
 
     return (
-        <Grid className={classes.container} item xs={12}>
+        <>
             <Paper className={classes.paper}>
 
                 <Menu tab={tab} handleTabs={handleTabs} />
@@ -150,7 +143,7 @@ const Landing = ({ history }) => {
                 notification={notify}
                 handleClose={handleClose}
             />
-        </Grid>
+        </>
     );
 };
 

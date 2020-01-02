@@ -1,5 +1,8 @@
-﻿import React, { Fragment } from 'react';
+﻿import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+
+import Auth from '../Auth/Landing';
 
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -8,9 +11,9 @@ import {
     Typography,
     CssBaseline,
     useScrollTrigger,
-    Box,
-    Container,
     Slide,
+    Button,
+    Modal
 } from '@material-ui/core';
 
 import Drawer from './Drawer';
@@ -25,6 +28,16 @@ const useStyles = makeStyles((theme) => ({
     appbar: {
         backgroundColor: '#E27D60',
     },
+    toolbar: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    auth: {
+        position: 'absolute',
+        right: 16,
+        color: 'white'
+    }
 }));
 
 const HideOnScroll = (props) => {
@@ -42,27 +55,68 @@ HideOnScroll.propTypes = {
     window: PropTypes.func,
 };
 
+const isAuth = (store, classes, openModal) => {
+    if (!store.loggedIn) {
+        return (
+            <Button
+                className={classes.auth}
+                onClick={openModal}
+            >
+                Login
+            </Button>
+        );
+    }
+
+    return (
+        <Button
+            className={classes.auth}
+            onClick={openModal}
+        >
+            {store.user.username}
+        </Button>
+    );
+}
+
 export default (props) => {
 
     const classes = useStyles();
+    const store = useSelector(state => state);
+
+    const [open, setOpen] = useState(false);
+
+    const openModal = () => setOpen(true);
+    const closeModal = () => setOpen(false);
 
     return (
-        <Fragment>
+        <>
             <CssBaseline />
             <HideOnScroll {...props}>
                 <AppBar className={classes.appbar}>
-                    <Toolbar>
+                    <Toolbar className={classes.toolbar} >
                         <Drawer />
+
                         <Typography
                             className={classes.title}
                             variant="h5"
                         >
                             Exercise App
                         </Typography>
+
+                        { isAuth(store, classes, openModal) }
                     </Toolbar>
+
                 </AppBar>
             </HideOnScroll>
+
+            <Modal
+                aria-labelledby="Login Register Panel"
+                aria-describedby="Use this panel to login or register"
+                open={open}
+                onClose={closeModal}
+            >
+                <Auth />
+            </Modal>
             <Toolbar />
-        </Fragment>
+        </>
     );
 };

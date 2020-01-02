@@ -25,6 +25,10 @@ const useStyles = makeStyles({
             color: 'inherit',
         },
     },
+    container: {
+        position: 'absolute',
+        left: 16,
+    }
 });
 
 const navList = [
@@ -69,7 +73,7 @@ export default () => {
     };
 
     return (
-        <div>
+        <div className={classes.container}>
 
             <Button onClick={toggleDrawer(true)}>
                 <Icon style={{ color: 'white' }}>
